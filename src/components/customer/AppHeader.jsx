@@ -8,7 +8,7 @@ import {
   MenuOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
 
@@ -81,9 +81,14 @@ const AppHeader = () => {
         </Badge>
 
         {/* Cart */}
-        <Badge count={3} size="small">
+        <Link to="/cart">
+          <Badge count={3} size="small">
+            <ShoppingCartOutlined style={{ fontSize: 20 }} />
+          </Badge>
+        </Link>
+        {/* <Badge count={3} size="small">
           <ShoppingCartOutlined style={{ fontSize: 20 }} />
-        </Badge>
+        </Badge> */}
 
         {/* Login */}
         <Button icon={<UserOutlined />} type="default">

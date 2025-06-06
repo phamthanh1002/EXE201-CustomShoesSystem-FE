@@ -6,6 +6,7 @@ import HomePage from "./pages/customer/Home/HomePage";
 import ShoeCustomPage from "./pages/customer/ShoeCustomization/ShoeCustomPage";
 import ShoeCleaningPage from "./pages/customer/ShoeCleaning/ShoeCleaningPage";
 import ShoeAccessoriesPage from "./pages/customer/ShoeAccessories/ShoeAccessoriesPage";
+import CartPage from "./pages/customer/Cart/CartPage";
 
 //Admin
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="custom" element={<ShoeCustomPage />} />
           <Route path="cleaning" element={<ShoeCleaningPage />} />
           <Route path="accessories" element={<ShoeAccessoriesPage />} />
+          <Route path="cart" element={<CartPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
