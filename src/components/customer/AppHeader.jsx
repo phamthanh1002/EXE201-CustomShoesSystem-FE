@@ -50,6 +50,7 @@ const AppHeader = () => {
             src="src\assets\logo.jpg"
             alt="Logo"
             style={{ width: 45, height: 45 }}
+            preview={false}
           />
           DesignMyKicks
         </div>
