@@ -15,9 +15,10 @@ export default function AppFooter() {
         {/* Cột 1: Logo / Tên thương hiệu */}
         <Col xs={24} sm={12} md={6}>
           <Image
-            src="src\assets\logo.jpg" 
+            src="src\assets\logo.jpg"
             alt="Logo"
             style={{ width: 45, height: 45 }}
+            preview={false}
           />
           <h2 style={{ marginBottom: 10 }}>DesignMyKicks</h2>
           <p>
