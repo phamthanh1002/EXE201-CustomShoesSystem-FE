@@ -30,7 +30,7 @@ const newsList = [
 export default function News() {
   return (
     <RevealOnScroll>
-      <div style={{ padding: "1rem" }}>
+      <div style={{ padding: "1rem", marginBottom: "2rem" }}>
         <Row gutter={[16, 16]}>
           {newsList.map((news) => (
             <Col xs={24} md={12} key={news.id}>
