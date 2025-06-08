@@ -5,6 +5,7 @@ import BestSellerCleaningShoes from "./BestSellerCleaningShoes";
 import BestSellerAccessory from "./BestSellerAccessory";
 import { useNavigate } from "react-router-dom";
 import RevealOnScroll from "../../../utils/RevealOnScroll";
+import img1 from "../../../assets/BestSellerCustomShoes/img1.jpg";
 
 const { Title, Paragraph } = Typography;
 
@@ -24,8 +25,7 @@ export default function BestSeller() {
               justifyContent: "start",
               alignItems: "center",
               height: "40rem",
-              backgroundImage:
-                "url('src/assets/BestSellerCustomShoes/img1.jpg')",
+              backgroundImage: `url(${img1})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
