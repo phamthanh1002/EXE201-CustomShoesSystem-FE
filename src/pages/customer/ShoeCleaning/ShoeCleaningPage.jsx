@@ -197,7 +197,7 @@ const ShoeCleaningPage = () => {
         </Row>
 
         <div style={{ textAlign: 'center', marginTop: '60px' }}>
-          <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>
+          <Text style={{ color: 'rgba(0, 0, 0, 0.7)', fontSize: '14px', fontWeight:"bold" }}>
             ✨ Tất cả các gói VNDều bao gồm tư vấn miễn phí và VNDảm bảo chất lượng
           </Text>
         </div>
