@@ -1,6 +1,15 @@
 import React from "react";
-import { Layout, Input, Button, Space, Badge, Tabs, Image } from "antd";
-import "./AppHeader.css";
+import {
+  Layout,
+  Input,
+  Button,
+  Space,
+  Badge,
+  Tabs,
+  Image,
+  Dropdown,
+  Menu,
+} from "antd";
 import {
   SearchOutlined,
   HeartOutlined,
@@ -9,12 +18,15 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.jpg";
+import useAuth from "../../hooks/useAuth"; // giả sử bạn lấy user ở đây
 
 const { Header } = Layout;
 
 const AppHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth(); // user có thể là object với { fullName, ... }
 
   const items = [
     { key: "/", label: "Trang chủ" },
@@ -22,6 +34,22 @@ const AppHeader = () => {
     { key: "/cleaning", label: "Vệ sinh" },
     { key: "/accessories", label: "Phụ kiện" },
   ];
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="profile" onClick={() => navigate("/profile")}>
+        Hồ sơ
+      </Menu.Item>
+      <Menu.Item style={{ color: "red" }} key="logout" onClick={handleLogout}>
+        Đăng xuất
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <Header
@@ -47,7 +75,7 @@ const AppHeader = () => {
           }}
         >
           <Image
-            src="src\assets\logo.jpg"
+            src={logo}
             alt="Logo"
             style={{ width: 45, height: 45 }}
             preview={false}
@@ -68,35 +96,39 @@ const AppHeader = () => {
 
       {/* RIGHT */}
       <Space size="middle">
-        {/* Search Bar */}
         <Input
           placeholder="Search products..."
           prefix={<SearchOutlined />}
           style={{ width: 200 }}
         />
 
-        {/* Favorite */}
         <Badge count={2} size="small">
           <HeartOutlined style={{ fontSize: 20 }} />
         </Badge>
 
-        {/* Cart */}
         <Link to="/cart">
           <Badge count={3} size="small">
             <ShoppingCartOutlined style={{ fontSize: 20 }} />
           </Badge>
         </Link>
-        {/* <Badge count={3} size="small">
-          <ShoppingCartOutlined style={{ fontSize: 20 }} />
-        </Badge> */}
 
-        {/* Login */}
-        <Button icon={<UserOutlined />} type="default">
-          Đăng nhập
-        </Button>
+        {user ? (
+          <Dropdown overlay={menu} placement="bottomRight">
+            <Button icon={<UserOutlined />} type="default">
+              Chào, {user.name || "User"}
+            </Button>
+          </Dropdown>
+        ) : (
+          <Button
+            onClick={() => navigate("/login")}
+            icon={<UserOutlined />}
+            type="default"
+          >
+            Đăng nhập
+          </Button>
+        )}
 
-        {/* Menu Button */}
-        <Button icon={<MenuOutlined />} type="text" />
+        {/* <Button icon={<MenuOutlined />} type="text" /> */}
       </Space>
     </Header>
   );

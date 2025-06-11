@@ -1,6 +1,7 @@
 import React from "react";
 import { Row, Col, Typography } from "antd";
 import ProductCard from "../../../components/common/ProductCard";
+import ShoeCleaningPage from "../ShoeCleaning/ShoeCleaningPage";
 
 const { Title, Paragraph } = Typography;
 
@@ -21,24 +22,7 @@ export default function BestSellerCleaningShoes() {
         }}
       />
 
-      <Row gutter={[24, 32]} style={{ padding: "1.5rem 2rem 1.5rem 2.5rem" }}>
-        {productList.map((_, index) => (
-          <Col
-            key={index}
-            xs={24}
-            sm={12}
-            md={8}
-            lg={6}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <ProductCard />
-          </Col>
-        ))}
-      </Row>
+      <ShoeCleaningPage />
     </div>
   );
 }

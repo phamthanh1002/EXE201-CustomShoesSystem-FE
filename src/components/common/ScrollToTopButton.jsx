@@ -10,13 +10,13 @@ const injectGlowKeyframes = () => {
   style.innerHTML = `
     @keyframes glow {
       0% {
-        box-shadow: 0 0 5px rgba(243, 147, 64, 0.3);
+        box-shadow: 0 0 5px rgba(255, 77, 79, 0.3);
       }
       50% {
-        box-shadow: 0 0 15px rgba(243, 147, 64, 0.7);
+        box-shadow: 0 0 15px rgba(255, 77, 79, 0.7);
       }
       100% {
-        box-shadow: 0 0 5px rgba(243, 147, 64, 0.3);
+        box-shadow: 0 0 5px rgba(255, 77, 79, 0.3);
       }
     }
   `;
@@ -27,7 +27,7 @@ const ScrollToTopButton = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    injectGlowKeyframes(); // Run once
+    injectGlowKeyframes();
   }, []);
 
   useEffect(() => {
@@ -51,9 +51,9 @@ const ScrollToTopButton = () => {
           position: "fixed",
           bottom: "30px",
           right: "30px",
-          backgroundColor: "white",
-          color: "black",
-          border: "1px solid rgb(243, 147, 64)",
+          backgroundColor: "#ff4d4f",
+          color: "white",
+          border: "1px solid #ff4d4f",
           borderRadius: "50%",
           width: "48px",
           height: "48px",

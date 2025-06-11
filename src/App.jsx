@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer, Slide } from "react-toastify";
 
 //Customer
 import CustomerLayout from "./layouts/CustomerLayout";
@@ -11,6 +12,7 @@ import CustomCursor from "./components/common/CustomCursor";
 import ScrollToTopButton from "./components/common/ScrollToTopButton";
 import LoadingScreen from "./components/common/LoadingScreen";
 import { useState, useEffect } from "react";
+import LoginPage from "./pages/auth/LoginPage";
 
 //Admin
 
@@ -27,10 +29,28 @@ function App() {
 
   return (
     <>
-      <CustomCursor />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Slide}
+      />
+      {/* <CustomCursor /> */}
       <ScrollToTopButton />
+
       <BrowserRouter>
         <Routes>
+          {/* Auth */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* Customer */}
           <Route path="/" element={<CustomerLayout />}>
             <Route index element={<HomePage />} />
             <Route path="custom" element={<ShoeCustomPage />} />

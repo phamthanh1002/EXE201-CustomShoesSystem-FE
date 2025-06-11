@@ -5,6 +5,7 @@ import {
   InstagramOutlined,
 } from "@ant-design/icons";
 import React from "react";
+import logo from "../../assets/logo.jpg";
 
 const { Footer } = Layout;
 
@@ -15,7 +16,7 @@ export default function AppFooter() {
         {/* Cột 1: Logo / Tên thương hiệu */}
         <Col xs={24} sm={12} md={6}>
           <Image
-            src="src\assets\logo.jpg"
+            src={logo}
             alt="Logo"
             style={{ width: 45, height: 45 }}
             preview={false}
