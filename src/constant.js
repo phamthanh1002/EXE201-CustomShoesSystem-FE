@@ -1,5 +1,5 @@
 // Base URL
-export const BASE_URL = "https://68357958cd78db2058c1ac83.mockapi.io/api/v1";
+export const BASE_URL = "https://localhost:7256/api";
 
-//APIs Item
-export const API_GET_ITEM = "/Games";
+//APIs AUTH
+export const API_LOGIN = "/auth/login";

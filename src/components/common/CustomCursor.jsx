@@ -69,8 +69,8 @@ const CustomCursor = () => {
               position: "fixed",
               top: y - 25,
               left: x - 25,
-              width: 50,
-              height: 50,
+              width: 20,
+              height: 20,
               borderRadius: "50%",
               border: "2px solid rgba(255, 59, 48, 0.5)",
               pointerEvents: "none",
@@ -88,8 +88,8 @@ const CustomCursor = () => {
           position: "fixed",
           top: 0,
           left: 0,
-          width: 14,
-          height: 14,
+          width: 10,
+          height: 10,
           borderRadius: "50%",
           backgroundColor: "#FF3B30",
           boxShadow: "0 0 6px 2px rgba(255, 59, 48, 0.8)",
@@ -103,7 +103,7 @@ const CustomCursor = () => {
 
       {/* Ẩn con trỏ mặc định */}
       <style>{`
-        body, img, .ant-card, .ant-card *, .ant-btn, button {
+        * {
           cursor: none !important;
         }
       `}</style>

@@ -7,7 +7,7 @@ const { Title, Text, Paragraph } = Typography;
 export default function ProductCard({ product }) {
   const [quantity, setQuantity] = useState(1);
 
-  if (!product) return null; // Optional: tránh lỗi khi product chưa có
+  if (!product) return null; 
 
   const totalPrice = product.price * quantity;
 

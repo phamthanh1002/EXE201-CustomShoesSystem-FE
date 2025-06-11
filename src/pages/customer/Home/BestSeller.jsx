@@ -70,13 +70,17 @@ export default function BestSeller() {
         </RevealOnScroll>
       </div>
 
-      <div style={{ width: "100%" }}>
-        <BestSellerCleaningShoes />
-      </div>
+      <RevealOnScroll>
+        <div style={{ width: "100%" }}>
+          <BestSellerCleaningShoes />
+        </div>
+      </RevealOnScroll>
 
-      <div style={{ width: "100%" }}>
-        <BestSellerAccessory />
-      </div>
+      <RevealOnScroll>
+        <div style={{ width: "100%" }}>
+          <BestSellerAccessory />
+        </div>
+      </RevealOnScroll>
     </Flex>
   );
 }
