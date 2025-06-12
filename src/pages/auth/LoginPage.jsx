@@ -6,8 +6,13 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { loginUser } from "../../store/slices/authSlice";
 import { toast } from "react-toastify";
+import { auth, provider } from "../../firebase";
+import { signInWithPopup } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { loginWithGoogle } from "../../store/slices/authSlice";
 
 export default function LoginPage() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { login, loading, error, user } = useAuth();
 
@@ -20,6 +25,33 @@ export default function LoginPage() {
       navigate("/");
     } else {
       toast.error(resultAction.payload || "Đăng nhập thất bại");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const googleUser = result.user;
+      const idToken = await googleUser.getIdToken();
+
+      const formData = {
+        firebaseUID: googleUser.uid,
+        email: googleUser.email,
+        name: googleUser.displayName,
+        idToken,
+      };
+
+      const resultAction = await dispatch(loginWithGoogle({ formData }));
+
+      if (loginWithGoogle.fulfilled.match(resultAction)) {
+        toast.success("Đăng nhập thành công!");
+        navigate("/");
+      } else {
+        toast.error(resultAction.payload || "Đăng nhập thất bại");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Lỗi khi đăng nhập bằng Google");
     }
   };
 
@@ -136,10 +168,25 @@ export default function LoginPage() {
             <Divider plain>or</Divider>
 
             <div style={{ textAlign: "center", marginBottom: 12 }}>
-              Don't have an account? <a href="/register">Create one</a>
+              Don't have an account?{" "}
+              <span
+                style={{
+                  color: "red",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
+                onClick={() => navigate("/register")}
+              >
+                Create one
+              </span>
             </div>
 
-            <Button icon={<GoogleOutlined />} block style={{ marginBottom: 8 }}>
+            <Button
+              icon={<GoogleOutlined />}
+              block
+              style={{ marginBottom: 8 }}
+              onClick={handleGoogleLogin}
+            >
               Continue with Google
             </Button>
           </div>

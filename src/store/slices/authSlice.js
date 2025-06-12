@@ -1,12 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosClient from "../../axiosClient";
-import { API_LOGIN } from "../../constant";
+import { API_LOGIN, API_LOGIN_GOOGLE } from "../../constant";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(API_LOGIN, { email, password });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response.data.message || "Đăng nhập thất bại"
+      );
+    }
+  }
+);
+
+export const loginWithGoogle = createAsyncThunk(
+  "auth/loginGoogle",
+  async ({ formData }, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(API_LOGIN_GOOGLE, formData);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -58,6 +72,27 @@ const authSlice = createSlice({
         localStorage.setItem("refreshToken", refreshToken);
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(loginWithGoogle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginWithGoogle.fulfilled, (state, action) => {
+        const { user, token, refreshToken, message } = action.payload;
+        state.loading = false;
+        state.user = user;
+        state.token = token;
+        state.refreshToken = refreshToken;
+        state.message = message;
+
+        // Lưu vào localStorage để giữ đăng nhập
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", refreshToken);
+      })
+      .addCase(loginWithGoogle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

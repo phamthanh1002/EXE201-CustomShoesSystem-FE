@@ -19,14 +19,16 @@ import {
 } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.jpg";
-import useAuth from "../../hooks/useAuth"; // giả sử bạn lấy user ở đây
+import useAuth from "../../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const { Header } = Layout;
 
 const AppHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth(); // user có thể là object với { fullName, ... }
+  const { user, logout } = useAuth(); 
+  console.log(user)
 
   const items = [
     { key: "/", label: "Trang chủ" },
@@ -37,6 +39,7 @@ const AppHeader = () => {
 
   const handleLogout = () => {
     logout();
+    toast.success("Bạn đã đăng xuất thành công!")
     navigate("/");
   };
 
