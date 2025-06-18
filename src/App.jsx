@@ -13,6 +13,8 @@ import ScrollToTopButton from "./components/common/ScrollToTopButton";
 import LoadingScreen from "./components/common/LoadingScreen";
 import { useState, useEffect } from "react";
 import LoginPage from "./pages/auth/LoginPage";
+import PaymentSuccess from "./pages/customer/Payment/PaymentSuccess";
+import PaymentFailure from "./pages/customer/Payment/PaymentFailure";
 
 //Admin
 
@@ -57,6 +59,8 @@ function App() {
             <Route path="cleaning" element={<ShoeCleaningPage />} />
             <Route path="accessories" element={<ShoeAccessoriesPage />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="payment-success" element={<PaymentSuccess />} />
+            <Route path="payment-failure" element={<PaymentFailure />} />
           </Route>
         </Routes>
       </BrowserRouter>
