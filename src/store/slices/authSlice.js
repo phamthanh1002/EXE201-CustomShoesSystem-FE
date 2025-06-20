@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosClient from "../../axiosClient";
-import { API_LOGIN, API_LOGIN_GOOGLE } from "../../constant";
+import { API_LOGIN, API_LOGIN_GOOGLE, API_REGISTER } from "../../constant";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -30,6 +30,18 @@ export const loginWithGoogle = createAsyncThunk(
   }
 );
 
+export const registerUser = createAsyncThunk(
+  "auth/register",
+  async ({ formData }, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(API_REGISTER, formData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || "Đăng ký thất bại");
+    }
+  }
+);
+
 const storedUser = localStorage.getItem("user");
 const storedToken = localStorage.getItem("token");
 const storedRefreshToken = localStorage.getItem("refreshToken");
@@ -49,7 +61,9 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.refreshToken = null;
-      localStorage.clear();
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
     },
   },
   extraReducers: (builder) => {
@@ -75,6 +89,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+      // login Google
       .addCase(loginWithGoogle.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -93,6 +109,22 @@ const authSlice = createSlice({
         localStorage.setItem("refreshToken", refreshToken);
       })
       .addCase(loginWithGoogle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // register
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        const { message } = action.payload;
+
+        state.loading = false;
+        state.message = message;
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
