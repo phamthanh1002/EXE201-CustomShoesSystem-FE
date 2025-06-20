@@ -25,29 +25,29 @@ const pageTransition = {
 
 // Animation cho image panel
 const imagePanelVariants = {
-  left: { 
+  left: {
     x: 0,
-    transition: { duration: 0.6, ease: "easeInOut" }
+    transition: { duration: 0.6, ease: "easeInOut" },
   },
-  right: { 
+  right: {
     x: "100%",
-    transition: { duration: 0.6, ease: "easeInOut" }
-  }
+    transition: { duration: 0.6, ease: "easeInOut" },
+  },
 };
 
 // Animation cho form content
 const formVariants = {
   initial: { opacity: 0, x: 20 },
-  animate: { 
-    opacity: 1, 
+  animate: {
+    opacity: 1,
     x: 0,
-    transition: { duration: 0.4, delay: 0.2 }
+    transition: { duration: 0.4, delay: 0.2 },
   },
-  exit: { 
-    opacity: 0, 
+  exit: {
+    opacity: 0,
     x: -20,
-    transition: { duration: 0.3 }
-  }
+    transition: { duration: 0.3 },
+  },
 };
 
 export default function LoginPage() {
@@ -59,8 +59,24 @@ export default function LoginPage() {
     const resultAction = await login(email, password);
 
     if (loginUser.fulfilled.match(resultAction)) {
+      const { user } = resultAction.payload;
+
+      console.log(user.roleName)
+
       toast.success("Đăng nhập thành công!");
-      navigate("/");
+
+      switch (user.roleName) {
+        case "Admin":
+          navigate("/admin");
+          break;
+        case "Staff":
+          navigate("/staff");
+          break;
+        case "Customer":
+        default:
+          navigate("/");
+          break;
+      }
     } else {
       toast.error(resultAction.payload || "Đăng nhập thất bại");
     }
@@ -191,7 +207,9 @@ export default function LoginPage() {
               exit="exit"
               style={{ width: "100%", maxWidth: 400 }}
             >
-              <h2 style={{ fontSize: "28px", fontWeight: 600, marginBottom: 24 }}>
+              <h2
+                style={{ fontSize: "28px", fontWeight: 600, marginBottom: 24 }}
+              >
                 Đăng nhập vào tài khoản
               </h2>
 

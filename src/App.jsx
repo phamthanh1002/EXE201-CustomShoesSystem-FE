@@ -16,14 +16,26 @@ import LoginPage from "./pages/auth/LoginPage";
 import PaymentSuccess from "./pages/customer/Payment/PaymentSuccess";
 import PaymentFailure from "./pages/customer/Payment/PaymentFailure";
 import RegisterPage from "./pages/auth/RegisterPage";
+
+import Unauthorized from "./components/common/Unauthorized";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+
+// Staff
+import StaffHome from "./pages/staff/StaffHome";
+
 import ProfilePage from "./pages/customer/Profile/Profile";
 
+
 //Admin
+import AdminHome from "./pages/admin/AdminHome";
 
 function App() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    return !sessionStorage.getItem("hasLoaded");
+  });
 
   const handleLoadingFinish = () => {
+    sessionStorage.setItem("hasLoaded", "true");
     setLoading(false);
   };
 
@@ -54,6 +66,7 @@ function App() {
           {/* Auth */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* Customer */}
           <Route path="/" element={<CustomerLayout />}>
@@ -65,6 +78,16 @@ function App() {
             <Route path="payment-success" element={<PaymentSuccess />} />
             <Route path="payment-failure" element={<PaymentFailure />} />
             <Route path="profile" element={<ProfilePage />} />
+          </Route>
+
+          {/* Staff */}
+          <Route element={<ProtectedRoute allowedRoles={["Staff"]} />}>
+            <Route path="/staff" element={<StaffHome />}></Route>
+          </Route>
+
+          {/* Admin */}
+          <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+            <Route path="/admin" element={<AdminHome />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

@@ -5,7 +5,7 @@ import {
   InstagramOutlined,
 } from "@ant-design/icons";
 import React from "react";
-import logo from "../../assets/logo.jpg";
+import logo from "../../assets/logo.png";
 
 const { Footer } = Layout;
 
