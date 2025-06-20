@@ -16,6 +16,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import PaymentSuccess from "./pages/customer/Payment/PaymentSuccess";
 import PaymentFailure from "./pages/customer/Payment/PaymentFailure";
 import RegisterPage from "./pages/auth/RegisterPage";
+import ProfilePage from "./pages/customer/Profile/Profile";
 
 //Admin
 
@@ -63,6 +64,7 @@ function App() {
             <Route path="cart" element={<CartPage />} />
             <Route path="payment-success" element={<PaymentSuccess />} />
             <Route path="payment-failure" element={<PaymentFailure />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Routes>
       </BrowserRouter>
