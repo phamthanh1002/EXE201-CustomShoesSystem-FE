@@ -1,23 +1,61 @@
-import React, { useEffect } from "react";
-import { Form, Input, Button, Divider, message } from "antd";
+import React from "react";
+import { Form, Input, Button, Divider } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import img1 from "../../assets/Login/img1.jpg";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { loginUser } from "../../store/slices/authSlice";
+import { loginUser, loginWithGoogle } from "../../store/slices/authSlice";
 import { toast } from "react-toastify";
 import { auth, provider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { loginWithGoogle } from "../../store/slices/authSlice";
+import { motion, AnimatePresence } from "framer-motion";
+
+// Animation config
+const pageVariants = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: 30 },
+};
+
+const pageTransition = {
+  duration: 0.5,
+  ease: "easeInOut",
+};
+
+// Animation cho image panel
+const imagePanelVariants = {
+  left: { 
+    x: 0,
+    transition: { duration: 0.6, ease: "easeInOut" }
+  },
+  right: { 
+    x: "100%",
+    transition: { duration: 0.6, ease: "easeInOut" }
+  }
+};
+
+// Animation cho form content
+const formVariants = {
+  initial: { opacity: 0, x: 20 },
+  animate: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.4, delay: 0.2 }
+  },
+  exit: { 
+    opacity: 0, 
+    x: -20,
+    transition: { duration: 0.3 }
+  }
+};
 
 export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { login, loading, error, user } = useAuth();
+  const { login, loading } = useAuth();
 
-  const onFinish = async (values) => {
-    const { email, password } = values;
+  const onFinish = async ({ email, password }) => {
     const resultAction = await login(email, password);
 
     if (loginUser.fulfilled.match(resultAction)) {
@@ -65,7 +103,12 @@ export default function LoginPage() {
         backgroundColor: "#f5f5f5",
       }}
     >
-      <div
+      <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
         style={{
           display: "flex",
           width: "80%",
@@ -75,12 +118,18 @@ export default function LoginPage() {
           borderRadius: "14px",
           overflow: "hidden",
           fontFamily: "'Inter', sans-serif",
+          boxShadow: "0 20px 50px rgba(0,0,0,0.1)",
+          position: "relative",
         }}
       >
-        {/* Left - Image + quote */}
-        <div
+        {/* Image Panel - có thể trượt */}
+        <motion.div
+          variants={imagePanelVariants}
+          animate="left"
           style={{
-            flex: 1,
+            position: "absolute",
+            width: "50%",
+            height: "100%",
             backgroundImage: `url(${img1})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -89,9 +138,13 @@ export default function LoginPage() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-end",
+            zIndex: 2,
           }}
         >
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
             style={{
               backgroundColor: "rgba(0,0,0,0.4)",
               borderRadius: 12,
@@ -99,16 +152,24 @@ export default function LoginPage() {
             }}
           >
             <p style={{ fontSize: 16, fontStyle: "italic", color: "#fff" }}>
-              “A shoe is not only a design, but it's a part of your body
-              language...”
+              "A shoe is not only a design, but it's a part of your body
+              language..."
             </p>
             <p style={{ fontWeight: "bold", marginTop: 10, color: "#fff" }}>
               Christian Louboutin
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Right - Login Form */}
+        {/* Left Container - Form khi ảnh ở bên trái */}
+        <div
+          style={{
+            flex: 1,
+            backgroundColor: "transparent",
+          }}
+        />
+
+        {/* Right Container - Login Form */}
         <div
           style={{
             flex: 1,
@@ -117,81 +178,92 @@ export default function LoginPage() {
             justifyContent: "center",
             alignItems: "center",
             padding: 40,
+            position: "relative",
+            zIndex: 1,
           }}
         >
-          <div style={{ width: "100%", maxWidth: 400 }}>
-            <h2 style={{ fontSize: "28px", fontWeight: 600, marginBottom: 24 }}>
-              Login to your account
-            </h2>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key="login-form"
+              variants={formVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              style={{ width: "100%", maxWidth: 400 }}
+            >
+              <h2 style={{ fontSize: "28px", fontWeight: 600, marginBottom: 24 }}>
+                Đăng nhập vào tài khoản
+              </h2>
 
-            <Form layout="vertical" onFinish={onFinish}>
-              <Form.Item
-                name="email"
-                rules={[
-                  { required: true, message: "Please input your email!" },
-                ]}
-              >
-                <Input placeholder="Email" />
-              </Form.Item>
-
-              <Form.Item
-                name="password"
-                rules={[
-                  { required: true, message: "Please input your password!" },
-                ]}
-              >
-                <Input.Password placeholder="Password" />
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  loading={loading}
-                  style={{ backgroundColor: "#000", border: "none" }}
+              <Form layout="vertical" onFinish={onFinish}>
+                <Form.Item
+                  name="email"
+                  rules={[
+                    { required: true, message: "Please input your email!" },
+                  ]}
                 >
-                  Login
-                </Button>
-              </Form.Item>
-            </Form>
+                  <Input placeholder="Email" />
+                </Form.Item>
 
-            <Button
-              type="default"
-              block
-              onClick={() => navigate(-1)}
-              style={{ marginBottom: 16 }}
-            >
-              ← Quay về trang trước
-            </Button>
+                <Form.Item
+                  name="password"
+                  rules={[
+                    { required: true, message: "Please input your password!" },
+                  ]}
+                >
+                  <Input.Password placeholder="Password" />
+                </Form.Item>
 
-            <Divider plain>or</Divider>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    block
+                    loading={loading}
+                    style={{ backgroundColor: "#000", border: "none" }}
+                  >
+                    Đăng nhập
+                  </Button>
+                </Form.Item>
+              </Form>
 
-            <div style={{ textAlign: "center", marginBottom: 12 }}>
-              Don't have an account?{" "}
-              <span
-                style={{
-                  color: "red",
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                }}
-                onClick={() => navigate("/register")}
+              <Button
+                type="default"
+                block
+                onClick={() => navigate("/")}
+                style={{ marginBottom: 16 }}
               >
-                Create one
-              </span>
-            </div>
+                ← Quay về trang chủ
+              </Button>
 
-            <Button
-              icon={<GoogleOutlined />}
-              block
-              style={{ marginBottom: 8 }}
-              onClick={handleGoogleLogin}
-            >
-              Continue with Google
-            </Button>
-          </div>
+              <Divider plain>or</Divider>
+
+              <div style={{ textAlign: "center", marginBottom: 12 }}>
+                Chưa có tài khoản?{" "}
+                <span
+                  style={{
+                    color: "red",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
+                  onClick={() => navigate("/register")}
+                >
+                  Tạo tài khoản
+                </span>
+              </div>
+
+              <Button
+                icon={<GoogleOutlined />}
+                block
+                style={{ marginBottom: 8 }}
+                onClick={handleGoogleLogin}
+              >
+                Continue with Google
+              </Button>
+            </motion.div>
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

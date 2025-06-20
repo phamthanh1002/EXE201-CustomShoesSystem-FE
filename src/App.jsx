@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import LoginPage from "./pages/auth/LoginPage";
 import PaymentSuccess from "./pages/customer/Payment/PaymentSuccess";
 import PaymentFailure from "./pages/customer/Payment/PaymentFailure";
+import RegisterPage from "./pages/auth/RegisterPage";
 
 //Admin
 
@@ -51,6 +52,7 @@ function App() {
         <Routes>
           {/* Auth */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           {/* Customer */}
           <Route path="/" element={<CustomerLayout />}>

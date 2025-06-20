@@ -1,8 +1,7 @@
 import axios from "axios";
-import { BASE_URL } from "./constant";
 
 const axiosClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL
 });
 
 let isRefreshing = false;
