@@ -1,11 +1,12 @@
-import React from "react";
-import { Form, Input, Button, Divider, Row, Col } from "antd";
-import { GoogleOutlined } from "@ant-design/icons";
-import img1 from "../../assets/Register/img1.jpg";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import React from 'react';
+import { Form, Input, Button, Divider, Row, Col } from 'antd';
+import { GoogleOutlined } from '@ant-design/icons';
+import img1 from '../../assets/Register/img1.jpg';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
+import useAuth from '../../hooks/useAuth';
 
 const pageVariants = {
   initial: { opacity: 0, y: 30 },
@@ -15,17 +16,17 @@ const pageVariants = {
 
 const pageTransition = {
   duration: 0.5,
-  ease: "easeInOut",
+  ease: 'easeInOut',
 };
 
 const imagePanelVariants = {
   left: {
     x: 0,
-    transition: { duration: 0.6, ease: "easeInOut" },
+    transition: { duration: 0.6, ease: 'easeInOut' },
   },
   right: {
-    x: "100%",
-    transition: { duration: 0.6, ease: "easeInOut" },
+    x: '100%',
+    transition: { duration: 0.6, ease: 'easeInOut' },
   },
 };
 
@@ -34,7 +35,7 @@ const formVariants = {
   animate: {
     opacity: 1,
     x: 0, // vào giữa
-    transition: { duration: 0.6, ease: "easeInOut" },
+    transition: { duration: 0.6, ease: 'easeInOut' },
   },
   exit: {
     opacity: 0,
@@ -45,24 +46,28 @@ const formVariants = {
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { register } = useAuth();
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log("Register values:", values);
-    // dispatch(registerUser(values)).then(...) // Uncomment if you handle redux
-    toast.success("Đăng ký thành công!");
-    navigate("/login");
+    try {
+      const { confirm, ...dataToSend } = values;
+      register(dataToSend);
+      toast.success('Đăng ký thành công!');
+      navigate('/login');
+    } catch (error) {
+      toast.error(error.message || 'Đăng nhập thất bại');
+    }
   };
 
   return (
     <div
       style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#f5f5f5",
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
       }}
     >
       <motion.div
@@ -72,16 +77,16 @@ export default function RegisterPage() {
         exit="exit"
         transition={pageTransition}
         style={{
-          display: "flex",
-          width: "80%",
-          maxWidth: "1000px",
-          height: "600px",
-          border: "2px solid black",
-          borderRadius: "14px",
-          overflow: "hidden",
+          display: 'flex',
+          width: '80%',
+          maxWidth: '1000px',
+          height: '600px',
+          border: '2px solid black',
+          borderRadius: '14px',
+          overflow: 'hidden',
           fontFamily: "'Inter', sans-serif",
-          boxShadow: "0 20px 50px rgba(0,0,0,0.1)",
-          position: "relative",
+          boxShadow: '0 20px 50px rgba(0,0,0,0.1)',
+          position: 'relative',
         }}
       >
         {/* Image Panel */}
@@ -89,17 +94,17 @@ export default function RegisterPage() {
           variants={imagePanelVariants}
           animate="right"
           style={{
-            position: "absolute",
-            width: "50%",
-            height: "100%",
+            position: 'absolute',
+            width: '50%',
+            height: '100%',
             backgroundImage: `url(${img1})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            color: "#fff",
-            padding: "40px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            color: '#fff',
+            padding: '40px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
             zIndex: 2,
           }}
         />
@@ -108,12 +113,12 @@ export default function RegisterPage() {
         <div
           style={{
             flex: 1,
-            backgroundColor: "#fff",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            backgroundColor: '#fff',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
             padding: 40,
-            position: "relative",
+            position: 'relative',
             zIndex: 1,
           }}
         >
@@ -124,11 +129,9 @@ export default function RegisterPage() {
               initial="initial"
               animate="animate"
               exit="exit"
-              style={{ width: "100%", maxWidth: 400 }}
+              style={{ width: '100%', maxWidth: 400 }}
             >
-              <h2
-                style={{ fontSize: "28px", fontWeight: 600, marginBottom: 24 }}
-              >
+              <h2 style={{ fontSize: '28px', fontWeight: 600, marginBottom: 24 }}>
                 Tạo tài khoản mới
               </h2>
 
@@ -137,24 +140,22 @@ export default function RegisterPage() {
                   <Col span={12}>
                     <Form.Item
                       name="name"
-                      rules={[
-                        { required: true, message: "Vui lòng nhập tên!" },
-                      ]}
+                      rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
                     >
                       <Input placeholder="Họ và tên" />
                     </Form.Item>
                   </Col>
                   <Col span={12}>
                     <Form.Item
-                      name="phone"
+                      name="phoneNumber"
                       rules={[
                         {
                           required: true,
-                          message: "Vui lòng nhập số điện thoại!",
+                          message: 'Vui lòng nhập số điện thoại!',
                         },
                         {
                           pattern: /^[0-9]{10,11}$/,
-                          message: "Số điện thoại không hợp lệ!",
+                          message: 'Số điện thoại không hợp lệ!',
                         },
                       ]}
                     >
@@ -165,16 +166,14 @@ export default function RegisterPage() {
 
                 <Form.Item
                   name="email"
-                  rules={[{ required: true, message: "Vui lòng nhập email!" }]}
+                  rules={[{ required: true, message: 'Vui lòng nhập email!' }]}
                 >
                   <Input placeholder="Email" />
                 </Form.Item>
 
                 <Form.Item
                   name="password"
-                  rules={[
-                    { required: true, message: "Vui lòng nhập mật khẩu!" },
-                  ]}
+                  rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
                   hasFeedback
                 >
                   <Input.Password placeholder="Mật khẩu" />
@@ -182,18 +181,16 @@ export default function RegisterPage() {
 
                 <Form.Item
                   name="confirm"
-                  dependencies={["password"]}
+                  dependencies={['password']}
                   hasFeedback
                   rules={[
-                    { required: true, message: "Vui lòng xác nhận mật khẩu!" },
+                    { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
-                        if (!value || getFieldValue("password") === value) {
+                        if (!value || getFieldValue('password') === value) {
                           return Promise.resolve();
                         }
-                        return Promise.reject(
-                          new Error("Mật khẩu xác nhận không khớp!")
-                        );
+                        return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'));
                       },
                     }),
                   ]}
@@ -206,7 +203,7 @@ export default function RegisterPage() {
                     type="primary"
                     htmlType="submit"
                     block
-                    style={{ backgroundColor: "#000", border: "none" }}
+                    style={{ backgroundColor: '#000', border: 'none' }}
                   >
                     Đăng ký
                   </Button>
@@ -216,7 +213,7 @@ export default function RegisterPage() {
               <Button
                 type="default"
                 block
-                onClick={() => navigate("/")}
+                onClick={() => navigate('/')}
                 style={{ marginBottom: 16 }}
               >
                 ← Quay về trang chủ
@@ -224,15 +221,15 @@ export default function RegisterPage() {
 
               <Divider plain>hoặc</Divider>
 
-              <div style={{ textAlign: "center", marginBottom: 12 }}>
-                Đã có tài khoản?{" "}
+              <div style={{ textAlign: 'center', marginBottom: 12 }}>
+                Đã có tài khoản?{' '}
                 <span
                   style={{
-                    color: "red",
-                    cursor: "pointer",
-                    textDecoration: "underline",
+                    color: 'red',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
                   }}
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate('/login')}
                 >
                   Đăng nhập
                 </span>
@@ -242,7 +239,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Empty right area just to balance layout */}
-        <div style={{ flex: 1, backgroundColor: "transparent" }} />
+        <div style={{ flex: 1, backgroundColor: 'transparent' }} />
       </motion.div>
     </div>
   );

@@ -2,18 +2,21 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { user } = useAuth();
 
+  const isInitialized = useSelector((state) => state.auth.isInitialized);
+
+  if (!isInitialized) return null;
+
   if (!user) return <Navigate to="/login" replace />;
 
-  // Nếu truyền allowedRoles, kiểm tra role
   if (allowedRoles && !allowedRoles.includes(user.roleName)) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // Nếu hợp lệ → render child route
   return <Outlet />;
 };
 

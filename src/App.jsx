@@ -8,7 +8,6 @@ import ShoeCustomPage from "./pages/customer/ShoeCustomization/ShoeCustomPage";
 import ShoeCleaningPage from "./pages/customer/ShoeCleaning/ShoeCleaningPage";
 import ShoeAccessoriesPage from "./pages/customer/ShoeAccessories/ShoeAccessoriesPage";
 import CartPage from "./pages/customer/Cart/CartPage";
-import CustomCursor from "./components/common/CustomCursor";
 import ScrollToTopButton from "./components/common/ScrollToTopButton";
 import LoadingScreen from "./components/common/LoadingScreen";
 import { useState, useEffect } from "react";
@@ -16,15 +15,12 @@ import LoginPage from "./pages/auth/LoginPage";
 import PaymentSuccess from "./pages/customer/Payment/PaymentSuccess";
 import PaymentFailure from "./pages/customer/Payment/PaymentFailure";
 import RegisterPage from "./pages/auth/RegisterPage";
-
+import ProfilePage from "./pages/customer/Profile/Profile";
 import Unauthorized from "./components/common/Unauthorized";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
 // Staff
 import StaffHome from "./pages/staff/StaffHome";
-
-import ProfilePage from "./pages/customer/Profile/Profile";
-
 
 //Admin
 import AdminHome from "./pages/admin/AdminHome";
@@ -81,14 +77,14 @@ function App() {
           </Route>
 
           {/* Staff */}
-          <Route element={<ProtectedRoute allowedRoles={["Staff"]} />}>
+          {/* <Route element={<ProtectedRoute allowedRoles={["Staff"]} />}>
             <Route path="/staff" element={<StaffHome />}></Route>
-          </Route>
+          </Route> */}
 
           {/* Admin */}
-          <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+          {/* <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
             <Route path="/admin" element={<AdminHome />}></Route>
-          </Route>
+          </Route> */}
         </Routes>
       </BrowserRouter>
     </>

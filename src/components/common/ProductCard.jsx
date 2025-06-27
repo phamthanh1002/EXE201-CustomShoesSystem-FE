@@ -20,7 +20,7 @@ export default function ProductCard({ product }) {
       <Card hoverable style={{ width: 300, border:"2px solid black" }}>
         <Image.PreviewGroup items={product.items}>
           <Image
-            src={product.items?.[0]}
+            src={product.imageUrl}
             alt={product.name}
             width="100%"
             height={180}
