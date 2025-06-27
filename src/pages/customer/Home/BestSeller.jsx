@@ -17,6 +17,7 @@ export default function BestSeller() {
       <div style={{ textAlign: "center", fontSize: "1.5rem" }}>BEST SELLER</div>
       <div style={{ width: "100%" }}>
         <BestSellerCustomShoes />
+
         <RevealOnScroll>
           <div
             style={{

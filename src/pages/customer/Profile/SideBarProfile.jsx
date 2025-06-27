@@ -50,7 +50,7 @@ function SideBarProfile({activeTab, setActiveTab}) {
                 }}
                 icon={<UserOutlined />}
                 />
-                <Title level={4} style={{ marginBottom: '8px' }}>Nguyễn Văn A</Title>
+                <Title level={4} style={{ marginBottom: '8px' }}>Phạm Công Thành</Title>
                 <Text type="secondary">Member since 2023</Text>
                 <div style={{ marginTop: '8px' }}>
                 <Rate disabled defaultValue={5} style={{ fontSize: '16px' }} />

@@ -108,8 +108,8 @@ function ProfileTabs({activeTab,
                     layout="vertical"
                     onFinish={handleSaveProfile}
                     initialValues={{
-                    name: 'Nguyễn Văn A',
-                    email: 'nguyenvana@email.com',
+                    name: 'Phạm Công Thành',
+                    email: 'pthanh123@gmail.com',
                     phone: '0123456789',
                     address: '123 Nguyễn Trãi, Hà Nội'
                     }}
@@ -152,14 +152,14 @@ function ProfileTabs({activeTab,
                     <Col xs={24} sm={12}>
                     <Text strong>Họ và tên:</Text>
                     <br />
-                    <Text>Nguyễn Văn A</Text>
+                    <Text>Phạm Công Thành</Text>
                     </Col>
                     <Col xs={24} sm={12}>
                     <Text strong>Email:</Text>
                     <br />
                     <Space>
                         <MailOutlined />
-                        <Text>nguyenvana@email.com</Text>
+                        <Text>pthanh123@gmail.com</Text>
                     </Space>
                     </Col>
                     <Col xs={24} sm={12}>

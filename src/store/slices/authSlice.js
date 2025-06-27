@@ -1,69 +1,66 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axiosClient from "../../axiosClient";
-import { API_LOGIN, API_LOGIN_GOOGLE, API_REGISTER } from "../../constant";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axiosClient from '../../axiosClient';
+import { API_LOGIN, API_LOGIN_GOOGLE, API_REGISTER } from '../../constant';
 
 export const loginUser = createAsyncThunk(
-  "auth/loginUser",
+  'auth/loginUser',
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(API_LOGIN, { email, password });
       return response.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response.data.message || "Đăng nhập thất bại"
-      );
+      return rejectWithValue(error.response.data.message || 'Đăng nhập thất bại');
     }
-  }
+  },
 );
 
 export const loginWithGoogle = createAsyncThunk(
-  "auth/loginGoogle",
+  'auth/loginGoogle',
   async ({ formData }, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(API_LOGIN_GOOGLE, formData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response.data.message || "Đăng nhập thất bại"
-      );
+      return rejectWithValue(error.response.data.message || 'Đăng nhập thất bại');
     }
-  }
+  },
 );
 
 export const registerUser = createAsyncThunk(
-  "auth/register",
+  'auth/register',
   async ({ formData }, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(API_REGISTER, formData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message || "Đăng ký thất bại");
+      return rejectWithValue(error.response.data.message || 'Đăng ký thất bại');
     }
-  }
+  },
 );
 
-const storedUser = localStorage.getItem("user");
-const storedToken = localStorage.getItem("token");
-const storedRefreshToken = localStorage.getItem("refreshToken");
+const storedUser = localStorage.getItem('user');
+const storedToken = localStorage.getItem('token');
+const storedRefreshToken = localStorage.getItem('refreshToken');
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
     user: storedUser ? JSON.parse(storedUser) : null,
     token: storedToken || null,
     refreshToken: storedRefreshToken || null,
-    message: "",
+    message: '',
     loading: false,
     error: null,
+    isInitialized: true,
   },
   reducers: {
     logout(state) {
       state.user = null;
       state.token = null;
       state.refreshToken = null;
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
     },
   },
   extraReducers: (builder) => {
@@ -80,10 +77,9 @@ const authSlice = createSlice({
         state.refreshToken = refreshToken;
         state.message = message;
 
-        // Lưu vào localStorage
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
-        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -103,26 +99,22 @@ const authSlice = createSlice({
         state.refreshToken = refreshToken;
         state.message = message;
 
-        // Lưu vào localStorage để giữ đăng nhập
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
-        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
       })
       .addCase(loginWithGoogle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+
       // register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        const { message } = action.payload;
-
         state.loading = false;
-        state.message = message;
-        state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
