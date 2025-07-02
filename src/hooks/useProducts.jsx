@@ -1,25 +1,54 @@
-// src/hooks/useTopCustomProducts.js
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { topAccessoryProduct, topCustomProduct } from '../store/slices/productSlice';
+import {
+  getAllAccessoryProduct,
+  getAllCustomProduct,
+  topAccessoryProduct,
+  topCustomProduct,
+} from '../store/slices/productSlice';
 
 const useProducts = () => {
   const dispatch = useDispatch();
 
-  const { topCustomProducts, topAccessoryProducts, loading, error } = useSelector(
-    (state) => state.products,
-  );
+  const {
+    customProducts,
+    accessoryProducts,
+    topCustomProducts,
+    topAccessoryProducts,
+
+    loadingTopCustom,
+    loadingTopAccessory,
+    loadingAllCustom,
+    loadingAllAccessory,
+
+    errorTopCustom,
+    errorTopAccessory,
+    errorAllCustom,
+    errorAllAccessory,
+  } = useSelector((state) => state.products);
 
   useEffect(() => {
     dispatch(topCustomProduct());
     dispatch(topAccessoryProduct());
+    dispatch(getAllCustomProduct());
+    dispatch(getAllAccessoryProduct());
   }, [dispatch]);
 
   return {
+    customProducts,
+    accessoryProducts,
     topCustomProducts,
     topAccessoryProducts,
-    loading,
-    error,
+
+    loadingTopCustom,
+    loadingTopAccessory,
+    loadingAllCustom,
+    loadingAllAccessory,
+
+    errorTopCustom,
+    errorTopAccessory,
+    errorAllCustom,
+    errorAllAccessory,
   };
 };
 

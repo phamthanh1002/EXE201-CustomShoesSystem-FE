@@ -1,5 +1,5 @@
 import React from 'react';
-import { Carousel, Row, Col, Typography } from 'antd';
+import { Carousel, Row, Col, Typography, Spin } from 'antd';
 import ProductCard from '../../../components/common/ProductCard';
 import { chunkArray } from '../../../utils/chunkArray';
 import useProducts from '../../../hooks/useProducts';
@@ -7,7 +7,7 @@ import useProducts from '../../../hooks/useProducts';
 const { Title } = Typography;
 
 export default function BestSellerAccessory() {
-  const { topAccessoryProducts, loading, error } = useProducts();
+  const { topAccessoryProducts, loadingTopAccessory, errorTopAccessory } = useProducts();
 
   const slides = chunkArray(topAccessoryProducts, 4);
 
@@ -25,44 +25,54 @@ export default function BestSellerAccessory() {
         }}
       />
 
-      <Carousel
-        dotPosition="left"
-        autoplay={{ dotDuration: true }}
-        autoplaySpeed={8000}
-        dots={true}
-        style={{
-          boxShadow: '0px 0px 20px 10px black inset',
-          backgroundColor: 'rgb(224, 224, 224)',
-          borderRadius: '1rem',
-        }}
-      >
-        {slides.map((group, index) => (
-          <div key={index}>
-            <Row
-              gutter={[24, 32]}
-              style={{ padding: '1.5rem 2rem 1.5rem 2.5rem' }}
-              justify="center"
-            >
-              {topAccessoryProducts.map((product) => (
-                <Col
-                  key={product.productID}
-                  xs={24}
-                  sm={12}
-                  md={8}
-                  lg={6}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
-                  <ProductCard product={product} />
-                </Col>
-              ))}
-            </Row>
+      <Spin spinning={loadingTopAccessory} tip="Đang tải phụ kiện...">
+        {errorTopAccessory ? (
+          <div style={{ color: 'red', textAlign: 'center', padding: '2rem' }}>
+            {errorTopAccessory}
           </div>
-        ))}
-      </Carousel>
+        ) : topAccessoryProducts.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '2rem' }}>Không có phụ kiện nào.</div>
+        ) : (
+          <Carousel
+            dotPosition="left"
+            autoplay={{ dotDuration: true }}
+            autoplaySpeed={8000}
+            dots={true}
+            style={{
+              boxShadow: '0px 0px 20px 10px black inset',
+              backgroundColor: 'rgb(224, 224, 224)',
+              borderRadius: '1rem',
+            }}
+          >
+            {slides.map((group, index) => (
+              <div key={index}>
+                <Row
+                  gutter={[24, 32]}
+                  style={{ padding: '1.5rem 2rem 1.5rem 2.5rem' }}
+                  justify="center"
+                >
+                  {group.map((product) => (
+                    <Col
+                      key={product.productID}
+                      xs={24}
+                      sm={12}
+                      md={8}
+                      lg={6}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <ProductCard product={product} />
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            ))}
+          </Carousel>
+        )}
+      </Spin>
     </div>
   );
 }

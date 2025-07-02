@@ -1,24 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
-import { API_LOGIN, API_LOGIN_GOOGLE, API_REGISTER } from '../../constant';
+import { API_LOGIN, API_REGISTER } from '../../constant';
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(API_LOGIN, { email, password });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data.message || 'Đăng nhập thất bại');
-    }
-  },
-);
-
-export const loginWithGoogle = createAsyncThunk(
-  'auth/loginGoogle',
-  async ({ formData }, { rejectWithValue }) => {
-    try {
-      const response = await axiosClient.post(API_LOGIN_GOOGLE, formData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message || 'Đăng nhập thất bại');
@@ -62,6 +50,16 @@ const authSlice = createSlice({
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
     },
+    setGoogleLoginSuccess(state, action) {
+      const { user, token, refreshToken } = action.payload;
+      state.user = user;
+      state.token = token;
+      state.refreshToken = refreshToken;
+
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -86,28 +84,6 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      // login Google
-      .addCase(loginWithGoogle.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(loginWithGoogle.fulfilled, (state, action) => {
-        const { user, token, refreshToken, message } = action.payload;
-        state.loading = false;
-        state.user = user;
-        state.token = token;
-        state.refreshToken = refreshToken;
-        state.message = message;
-
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', refreshToken);
-      })
-      .addCase(loginWithGoogle.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
       // register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -123,5 +99,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setGoogleLoginSuccess } = authSlice.actions;
 export default authSlice.reducer;

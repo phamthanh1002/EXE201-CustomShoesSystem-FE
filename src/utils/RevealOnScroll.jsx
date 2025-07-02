@@ -1,6 +1,6 @@
-import React, { useEffect, useState, Suspense } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import React, { useEffect, useState, Suspense } from 'react';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 export default function RevealOnScroll({
   children,
@@ -8,15 +8,18 @@ export default function RevealOnScroll({
   fallback = <div>Đang tải...</div>,
 }) {
   const controls = useAnimation();
-  const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: false });
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
   const [show, setShow] = useState(!lazy);
 
   useEffect(() => {
     if (inView) {
-      controls.start("visible");
+      controls.start('visible');
       if (lazy) setShow(true);
     } else {
-      controls.start("hidden");
+      controls.start('hidden');
       if (lazy) setShow(false);
     }
   }, [controls, inView, lazy]);
@@ -27,12 +30,7 @@ export default function RevealOnScroll({
   };
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
+    <motion.div ref={ref} initial="hidden" animate={controls} variants={variants}>
       {show ? <Suspense fallback={fallback}>{children}</Suspense> : null}
     </motion.div>
   );

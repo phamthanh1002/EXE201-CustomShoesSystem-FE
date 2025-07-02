@@ -4,12 +4,10 @@ import { GoogleOutlined } from '@ant-design/icons';
 import img1 from '../../assets/Login/img1.jpg';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import { loginUser, loginWithGoogle } from '../../store/slices/authSlice';
+import { loginUser } from '../../store/slices/authSlice';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
 
 // Animation config
 const pageVariants = {
