@@ -1,23 +1,21 @@
-import React from 'react';
-import InfinityText from './InfinityText';
-import ImageBanner from './ImageBanner';
-import BestSeller from './BestSeller';
-import RevealOnScroll from '../../../utils/RevealOnScroll';
-import AboutUs from './AboutUs';
-import Feedback from './Feedback';
-import News from './News';
+import { lazy, Suspense } from 'react';
+
+const InfinityText = lazy(() => import('./InfinityText'));
+const ImageBanner = lazy(() => import('./ImageBanner'));
+const AboutUs = lazy(() => import('./AboutUs'));
+const BestSeller = lazy(() => import('./BestSeller'));
+const Feedback = lazy(() => import('./Feedback'));
+const News = lazy(() => import('./News'));
 
 export default function HomePage() {
   return (
-    <>
-      <RevealOnScroll>
-        <InfinityText />
-        <ImageBanner />
-        <AboutUs />
-        <BestSeller />
-        <Feedback />
-        <News />
-      </RevealOnScroll>
-    </>
+    <Suspense fallback={<div>Loading...</div>}>
+      <InfinityText />
+      <ImageBanner />
+      <AboutUs />
+      <BestSeller />
+      <Feedback />
+      <News />
+    </Suspense>
   );
 }

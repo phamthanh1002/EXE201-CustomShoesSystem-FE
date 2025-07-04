@@ -1,6 +1,8 @@
 const mergeServiceData = (templatePlans, serviceData) => {
   return templatePlans.map((template) => {
-    const matchedService = serviceData.find((service) => service.packageName === template.title);
+    const matchedService = serviceData.find(
+      (service) => service.packageName === template.packageName,
+    );
 
     return matchedService
       ? {

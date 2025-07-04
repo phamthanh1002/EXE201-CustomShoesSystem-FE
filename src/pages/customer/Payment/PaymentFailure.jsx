@@ -23,7 +23,7 @@ const PaymentFailure = () => {
           <Button
             style={{ backgroundColor: "black", color: "white" }}
             key="retry"
-            onClick={() => navigate("/checkout")}
+            onClick={() => navigate("/cart")}
           >
             Thử lại
           </Button>,

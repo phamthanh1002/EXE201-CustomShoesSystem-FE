@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
-import { API_LOGIN, API_REGISTER } from '../../constant';
+import { API_GET_MY_ADDRESS, API_LOGIN, API_REGISTER } from '../../constant';
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
@@ -26,6 +26,15 @@ export const registerUser = createAsyncThunk(
   },
 );
 
+export const getMyAddress = createAsyncThunk('myAddress/get', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosClient.get(API_GET_MY_ADDRESS);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response.data.message || 'Load địa chỉ thất bại');
+  }
+});
+
 const storedUser = localStorage.getItem('user');
 const storedToken = localStorage.getItem('token');
 const storedRefreshToken = localStorage.getItem('refreshToken');
@@ -49,6 +58,7 @@ const authSlice = createSlice({
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('cart');
     },
     setGoogleLoginSuccess(state, action) {
       const { user, token, refreshToken } = action.payload;
@@ -93,6 +103,22 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      //get my address
+      .addCase(getMyAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getMyAddress.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user.address = action.payload;
+          localStorage.setItem('user', JSON.stringify(state.user));
+        }
+      })
+      .addCase(getMyAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

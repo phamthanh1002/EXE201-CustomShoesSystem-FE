@@ -1,6 +1,7 @@
 //APIs Auth
 export const API_LOGIN = '/auth/login';
 export const API_REGISTER = '/auth/register';
+export const API_GET_MY_ADDRESS = '/CustomerAddresses/my-addresses';
 
 //APIs Product
 export const API_GET_TOP_8_CUSTOM_PRODUCT = '/Product/custom/hot-products?topN=8';
@@ -16,3 +17,6 @@ export const API_GET_ALL_FEEDBACK = '/Feedback/all';
 
 //APIs Service
 export const API_GET_ALL_SERVICE = '/ServicePackage';
+
+//APIs Orders
+export const API_CREATE_ORDER = '/Order/create-order';

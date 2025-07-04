@@ -9,7 +9,7 @@ export default function RevealOnScroll({
 }) {
   const controls = useAnimation();
   const [ref, inView] = useInView({
-    threshold: 0.1,
+    threshold: 0.05,
     triggerOnce: false,
   });
   const [show, setShow] = useState(!lazy);

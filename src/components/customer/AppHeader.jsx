@@ -13,6 +13,7 @@ import useAuth from '../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import SearchBar from '../common/SearchBar';
 import { useState, useEffect } from 'react';
+import useCart from '../../hooks/useCart';
 
 const { useBreakpoint } = Grid;
 const { Header } = Layout;
@@ -22,8 +23,8 @@ const AppHeader = () => {
   const location = useLocation();
   const screens = useBreakpoint();
   const [searchTerm, setSearchTerm] = useState('');
-
   const { user, logout } = useAuth();
+  const { cartItems } = useCart();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -127,7 +128,7 @@ const AppHeader = () => {
         </Badge>
 
         <Link to="/cart">
-          <Badge count={3} size="small">
+          <Badge count={cartItems.length} size="small">
             <ShoppingCartOutlined style={{ fontSize: 20 }} />
           </Badge>
         </Link>

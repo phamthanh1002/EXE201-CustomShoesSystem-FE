@@ -5,7 +5,7 @@ import BestSellerCleaningShoes from './BestSellerCleaningShoes';
 import BestSellerAccessory from './BestSellerAccessory';
 import { useNavigate } from 'react-router-dom';
 import RevealOnScroll from '../../../utils/RevealOnScroll';
-import img1 from '../../../assets/BestSellerCustomShoes/img1.jpg';
+import img1 from '../../../assets/BestSellerCustomShoes/img1.webp';
 
 const { Title, Paragraph } = Typography;
 
@@ -19,9 +19,7 @@ export default function BestSeller() {
       </div>
 
       <div style={{ width: '100%' }}>
-        <RevealOnScroll>
-          <BestSellerCustomShoes />
-        </RevealOnScroll>
+        <BestSellerCustomShoes />
 
         <RevealOnScroll>
           <div

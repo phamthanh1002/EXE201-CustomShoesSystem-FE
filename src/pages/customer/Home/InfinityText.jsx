@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const textArray = [
@@ -10,6 +10,15 @@ const textArray = [
 ];
 
 const InfinityText = () => {
+  const [start, setStart] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setStart(true);
+    }, 500); 
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <div
       style={{
@@ -22,16 +31,17 @@ const InfinityText = () => {
       <motion.div
         style={{
           display: 'flex',
-          gap: '8vw', // responsive spacing
-          fontSize: 'clamp(14px, 2.5vw, 24px)', // responsive font
+          gap: '8vw',
+          fontSize: 'clamp(14px, 2.5vw, 24px)',
           fontWeight: 'bold',
           color: 'white',
+          willChange: 'transform',
         }}
-        animate={{ x: ['0%', '-100%'] }}
+        animate={start ? { x: ['0%', '-100%'] } : false} // ⬅ chỉ animate khi start
         transition={{
           repeat: Infinity,
           duration: 15,
-          ease: 'linear', // smoother for continuous scroll
+          ease: 'linear',
         }}
       >
         {[...textArray, ...textArray].map((item, index) => (

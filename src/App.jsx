@@ -1,51 +1,56 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify';
+import { useEffect, useState, lazy } from 'react';
 
-//Customer
-import CustomerLayout from './layouts/CustomerLayout';
-import HomePage from './pages/customer/Home/HomePage';
-import ShoeCustomPage from './pages/customer/ShoeCustomization/ShoeCustomPage';
-import ShoeCleaningPage from './pages/customer/ShoeCleaning/ShoeCleaningPage';
-import ShoeAccessoriesPage from './pages/customer/ShoeAccessories/ShoeAccessoriesPage';
-import CartPage from './pages/customer/Cart/CartPage';
 import ScrollToTopButton from './components/common/ScrollToTopButton';
 import LoadingScreen from './components/common/LoadingScreen';
-import { useState, useEffect } from 'react';
-import LoginPage from './pages/auth/LoginPage';
-import PaymentSuccess from './pages/customer/Payment/PaymentSuccess';
-import PaymentFailure from './pages/customer/Payment/PaymentFailure';
-import RegisterPage from './pages/auth/RegisterPage';
-import ProfilePage from './pages/customer/Profile/Profile';
 import Unauthorized from './components/common/Unauthorized';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import SearchResultPage from './pages/customer/Search/SearchResultPage';
+import LazyWrapper from './utils/LazyWrapper';
 
-// Staff
-import StaffHome from './pages/staff/StaffHome';
+// Layouts
+const CustomerLayout = lazy(() => import('./layouts/CustomerLayout'));
 
-//Admin
-import AdminHome from './pages/admin/AdminHome';
-import OAuthSuccess from './pages/auth/OAuthSuccess';
+// Auth
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
+const OAuthSuccess = lazy(() => import('./pages/auth/OAuthSuccess'));
+
+// Customer Pages
+const HomePage = lazy(() => import('./pages/customer/Home/HomePage'));
+const ShoeCustomPage = lazy(() => import('./pages/customer/ShoeCustomization/ShoeCustomPage'));
+const ShoeCleaningPage = lazy(() => import('./pages/customer/ShoeCleaning/ShoeCleaningPage'));
+const ShoeAccessoriesPage = lazy(() =>
+  import('./pages/customer/ShoeAccessories/ShoeAccessoriesPage'),
+);
+const CartPage = lazy(() => import('./pages/customer/Cart/CartPage'));
+const PaymentSuccess = lazy(() => import('./pages/customer/Payment/PaymentSuccess'));
+const PaymentFailure = lazy(() => import('./pages/customer/Payment/PaymentFailure'));
+const ProfilePage = lazy(() => import('./pages/customer/Profile/Profile'));
+const SearchResultPage = lazy(() => import('./pages/customer/Search/SearchResultPage'));
+const OrderCreateSuccess = lazy(() => import('./pages/customer/Order/OrderCreateSuccess'));
+
+// Staff & Admin
+const StaffHome = lazy(() => import('./pages/staff/StaffHome'));
+const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
 
 function App() {
-  const [loading, setLoading] = useState(() => {
-    return !sessionStorage.getItem('hasLoaded');
-  });
+  const [loading, setLoading] = useState(() => !sessionStorage.getItem('hasLoaded'));
 
-  const handleLoadingFinish = () => {
-    sessionStorage.setItem('hasLoaded', 'true');
-    setLoading(false);
-  };
+  useEffect(() => {
+    if (loading) {
+      sessionStorage.setItem('hasLoaded', 'true');
+      setLoading(false);
+    }
+  }, [loading]);
 
-  if (loading) {
-    return <LoadingScreen onFinish={handleLoadingFinish} />;
-  }
+  if (loading) return <LoadingScreen onFinish={() => setLoading(false)} />;
 
   return (
     <>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick={false}
@@ -56,38 +61,38 @@ function App() {
         theme="dark"
         transition={Slide}
       />
-      {/* <CustomCursor /> */}
       <ScrollToTopButton />
 
       <BrowserRouter>
         <Routes>
           {/* Auth */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={LazyWrapper(LoginPage)} />
+          <Route path="/register" element={LazyWrapper(RegisterPage)} />
           <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="/oauth-success" element={<OAuthSuccess />} />
+          <Route path="/oauth-success" element={LazyWrapper(OAuthSuccess)} />
 
           {/* Customer */}
-          <Route path="/" element={<CustomerLayout />}>
-            <Route index element={<HomePage />} />
-            <Route path="custom" element={<ShoeCustomPage />} />
-            <Route path="cleaning" element={<ShoeCleaningPage />} />
-            <Route path="accessories" element={<ShoeAccessoriesPage />} />
-            <Route path="cart" element={<CartPage />} />
-            <Route path="payment-success" element={<PaymentSuccess />} />
-            <Route path="payment-failure" element={<PaymentFailure />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="search" element={<SearchResultPage />} />
+          <Route path="/" element={LazyWrapper(CustomerLayout)}>
+            <Route index element={LazyWrapper(HomePage)} />
+            <Route path="custom" element={LazyWrapper(ShoeCustomPage)} />
+            <Route path="cleaning" element={LazyWrapper(ShoeCleaningPage)} />
+            <Route path="accessories" element={LazyWrapper(ShoeAccessoriesPage)} />
+            <Route path="cart" element={LazyWrapper(CartPage)} />
+            <Route path="payment-success" element={LazyWrapper(PaymentSuccess)} />
+            <Route path="payment-failure" element={LazyWrapper(PaymentFailure)} />
+            <Route path="profile" element={LazyWrapper(ProfilePage)} />
+            <Route path="search" element={LazyWrapper(SearchResultPage)} />
+            <Route path="order-create-success" element={LazyWrapper(OrderCreateSuccess)} />
           </Route>
 
           {/* Staff */}
           <Route element={<ProtectedRoute allowedRoles={['Staff']} />}>
-            <Route path="/staff" element={<StaffHome />}></Route>
+            <Route path="/staff" element={LazyWrapper(StaffHome)} />
           </Route>
 
           {/* Admin */}
           <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
-            <Route path="/admin" element={<AdminHome />}></Route>
+            <Route path="/admin" element={LazyWrapper(AdminHome)} />
           </Route>
         </Routes>
       </BrowserRouter>

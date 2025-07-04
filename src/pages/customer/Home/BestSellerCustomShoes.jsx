@@ -1,12 +1,12 @@
 import React from 'react';
 import { Row, Col, Typography, Spin } from 'antd';
 import ProductCard from '../../../components/common/ProductCard';
-import useProducts from '../../../hooks/useProducts';
+import useTopCustomProducts from '../../../hooks/useTopCustomProducts';
 
 const { Title } = Typography;
 
 export default function BestSellerCustomShoes() {
-  const { topCustomProducts, loadingTopCustom, errorTopCustom } = useProducts();
+  const { topCustomProducts, loadingTopCustom, errorTopCustom } = useTopCustomProducts();
 
   return (
     <div style={{ padding: '1rem' }}>

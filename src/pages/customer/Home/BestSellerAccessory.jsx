@@ -2,12 +2,13 @@ import React from 'react';
 import { Carousel, Row, Col, Typography, Spin } from 'antd';
 import ProductCard from '../../../components/common/ProductCard';
 import { chunkArray } from '../../../utils/chunkArray';
-import useProducts from '../../../hooks/useProducts';
+import useTopAccessoryProducts from '../../../hooks/useTopAccessoryProducts';
 
 const { Title } = Typography;
 
 export default function BestSellerAccessory() {
-  const { topAccessoryProducts, loadingTopAccessory, errorTopAccessory } = useProducts();
+  const { topAccessoryProducts, loadingTopAccessory, errorTopAccessory } =
+    useTopAccessoryProducts();
 
   const slides = chunkArray(topAccessoryProducts, 4);
 
