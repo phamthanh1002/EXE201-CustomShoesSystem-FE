@@ -1,9 +1,9 @@
 import React from 'react';
 import { Carousel } from 'antd';
-import image1 from '../../../assets/ImageBanner/image1.jpg';
-import image2 from '../../../assets/ImageBanner/image2.jpg';
-import image3 from '../../../assets/ImageBanner/image3.jpg';
-import image4 from '../../../assets/ImageBanner/image4.jpg';
+import image1 from '../../../assets/ImageBanner/image1.webp';
+import image2 from '../../../assets/ImageBanner/image2.webp';
+import image3 from '../../../assets/ImageBanner/image3.webp';
+import image4 from '../../../assets/ImageBanner/image4.webp';
 
 export default function ImageBanner() {
   const contentStyle = {

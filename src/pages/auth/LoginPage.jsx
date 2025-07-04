@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Divider } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
-import img1 from '../../assets/Login/img1.jpg';
+import img1 from '../../assets/Login/img1.webp';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { loginUser } from '../../store/slices/authSlice';
@@ -69,14 +69,6 @@ export default function LoginPage() {
       }
     } else {
       toast.error(resultAction.payload || 'Đăng nhập thất bại');
-    }
-  };
-
-  const handleGoogleLogin = async (credentialResponse) => {
-    try {
-    } catch (error) {
-      console.error(error);
-      toast.error('Lỗi khi đăng nhập bằng Google');
     }
   };
 

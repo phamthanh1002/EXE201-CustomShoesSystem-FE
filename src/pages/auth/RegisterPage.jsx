@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Divider, Row, Col } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
-import img1 from '../../assets/Register/img1.jpg';
+import img1 from '../../assets/Register/img1.webp';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';

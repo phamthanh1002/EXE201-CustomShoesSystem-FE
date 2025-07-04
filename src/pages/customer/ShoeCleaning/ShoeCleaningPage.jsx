@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllServicePackage } from '../../../store/slices/serviceSlice';
 import mergeServiceData from '../../../utils/mergeServiceData';
+import useCart from '../../../hooks/useCart';
+import { toast } from 'react-toastify';
+import imageService from '../../../assets/cleaning-service.webp';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -12,6 +15,7 @@ const ShoeCleaningPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { services, loading, error } = useSelector((state) => state.services);
+  const { addToCart } = useCart();
 
   const [hoveredCardId, setHoveredCardId] = useState(null);
 
@@ -22,7 +26,8 @@ const ShoeCleaningPage = () => {
   const pricingPlans = [
     {
       id: 'basic',
-      title: 'Cơ Bản',
+      title: 'Vệ Sinh Cơ Bản',
+      packageName: 'Cơ Bản',
       price: '50.000',
       originalPrice: '70.000',
       description: 'Dành cho việc vệ sinh giày thông thường',
@@ -38,7 +43,8 @@ const ShoeCleaningPage = () => {
     },
     {
       id: 'professional',
-      title: 'Chuyên Nghiệp',
+      title: 'Vệ Sinh Chuyên Nghiệp',
+      packageName: 'Chuyên Nghiệp',
       price: '120.000',
       originalPrice: '150.000',
       description: 'Dịch vụ vệ sinh toàn diện và chuyên sâu',
@@ -55,7 +61,8 @@ const ShoeCleaningPage = () => {
     },
     {
       id: 'premium',
-      title: 'Cao Cấp',
+      title: 'Vệ Sinh Cao Cấp',
+      packageName: 'Cao Cấp',
       price: '200.000',
       originalPrice: '250.000',
       description: 'Dịch vụ premium với công nghệ hiện đại',
@@ -222,7 +229,19 @@ const ShoeCleaningPage = () => {
 
                       <Button
                         type={plan.buttonType}
-                        onClick={() => navigate('/cart')}
+                        onClick={() => {
+                          addToCart({
+                            id: plan.id,
+                            packageID: plan.packageID,
+                            packageName: plan.title,
+                            price: Number(plan.price.replace(/\D/g, '')),
+                            originalPrice: Number(plan.originalPrice.replace(/\D/g, '')),
+                            description: plan.description,
+                            imageUrl: plan.imageUrl || imageService,
+                            quantity: 1,
+                          });
+                          toast.success('Đã thêm vào giỏ hàng!');
+                        }}
                         size="large"
                         block
                         style={{

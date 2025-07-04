@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Row, Col, Typography, Spin } from 'antd';
-import useProducts from '../../../hooks/useProducts';
 import ProductCard from '../../../components/common/ProductCard';
 import InfiniteScrollList from '../../../utils/InfiniteScrollList';
 import FilterBox from '../../../components/common/FilterBox';
