@@ -38,7 +38,7 @@ import {
 const { Title, Text } = Typography;
 
 
-function SideBarProfile({activeTab, setActiveTab}) {
+function SideBarProfile({activeTab, setActiveTab, user}) {
     return ( <>
         <Col xs={24} lg={6}>
             <Card style={{ textAlign: 'center', marginBottom: '24px' }}>
@@ -50,12 +50,12 @@ function SideBarProfile({activeTab, setActiveTab}) {
                 }}
                 icon={<UserOutlined />}
                 />
-                <Title level={4} style={{ marginBottom: '8px' }}>Phạm Công Thành</Title>
+                <Title level={4} style={{ marginBottom: '8px' }}>{user.name}</Title>
                 <Text type="secondary">Member since 2023</Text>
                 <div style={{ marginTop: '8px' }}>
                 <Rate disabled defaultValue={5} style={{ fontSize: '16px' }} />
                 <br />
-                <Tag color="gold" style={{ marginTop: '8px' }}>VIP Customer</Tag>
+                <Tag color="gold" style={{ marginTop: '8px' }}>Customer</Tag>
                 </div>
             </Card>
             <Menu

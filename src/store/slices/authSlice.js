@@ -1,6 +1,11 @@
+// src/store/slices/authSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
-import { API_GET_MY_ADDRESS, API_LOGIN, API_REGISTER } from '../../constant';
+import { API_LOGIN, API_REGISTER } from '../../constant';
+
+const storedUser = localStorage.getItem('user');
+const storedToken = localStorage.getItem('token');
+const storedRefreshToken = localStorage.getItem('refreshToken');
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
@@ -15,7 +20,7 @@ export const loginUser = createAsyncThunk(
 );
 
 export const registerUser = createAsyncThunk(
-  'auth/register',
+  'auth/registerUser',
   async ({ formData }, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(API_REGISTER, formData);
@@ -25,19 +30,6 @@ export const registerUser = createAsyncThunk(
     }
   },
 );
-
-export const getMyAddress = createAsyncThunk('myAddress/get', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axiosClient.get(API_GET_MY_ADDRESS);
-    return response.data;
-  } catch (error) {
-    return rejectWithValue(error.response.data.message || 'Load địa chỉ thất bại');
-  }
-});
-
-const storedUser = localStorage.getItem('user');
-const storedToken = localStorage.getItem('token');
-const storedRefreshToken = localStorage.getItem('refreshToken');
 
 const authSlice = createSlice({
   name: 'auth',
@@ -70,9 +62,16 @@ const authSlice = createSlice({
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
     },
+    setUserAddresses(state, action) {
+      if (state.user) {
+        state.user.address = action.payload;
+        localStorage.setItem('user', JSON.stringify(state.user));
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
+      // login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -99,31 +98,15 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state) => {
         state.loading = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      //get my address
-      .addCase(getMyAddress.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getMyAddress.fulfilled, (state, action) => {
-        if (state.user) {
-          state.user.address = action.payload;
-          localStorage.setItem('user', JSON.stringify(state.user));
-        }
-      })
-      .addCase(getMyAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { logout, setGoogleLoginSuccess } = authSlice.actions;
+export const { logout, setGoogleLoginSuccess, setUserAddresses } = authSlice.actions;
 export default authSlice.reducer;
