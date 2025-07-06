@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
-import { API_CREATE_ORDER } from '../../constant';
+import { API_CREATE_ORDER, API_GET_ALL_MY_ORDER } from '../../constant';
 
 export const createOrder = createAsyncThunk(
   'order/create',
@@ -16,14 +16,33 @@ export const createOrder = createAsyncThunk(
   },
 );
 
+export const getAllMyOrder = createAsyncThunk(
+  'order/get-all',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.get(API_GET_ALL_MY_ORDER.replace(':id', userId));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || 'Load đơn hàng thất bại!',
+      );
+    }
+  },
+);
+
 // 🧊 Initial State
 const initialState = {
-  loading: false,
-  success: false,
-  error: null,
+  orders: [],
   orderData: null,
   paymentUrl: null,
   message: '',
+  success: false,
+
+  createOrderLoading: false,
+  createOrderError: null,
+
+  myOrdersLoading: false,
+  myOrdersError: null,
 };
 
 const orderSlice = createSlice({
@@ -32,7 +51,7 @@ const orderSlice = createSlice({
   reducers: {
     resetOrderState(state) {
       state.success = false;
-      state.error = null;
+      state.createOrderError = null;
       state.orderData = null;
       state.paymentUrl = null;
       state.message = '';
@@ -40,26 +59,40 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // CREATE ORDER
       .addCase(createOrder.pending, (state) => {
-        state.loading = true;
+        state.createOrderLoading = true;
+        state.createOrderError = null;
         state.success = false;
-        state.error = null;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.loading = false;
+        state.createOrderLoading = false;
         state.success = true;
         state.orderData = action.payload.orderData;
         state.paymentUrl = action.payload.paymentUrl;
         state.message = action.payload.message;
       })
       .addCase(createOrder.rejected, (state, action) => {
-        state.loading = false;
+        state.createOrderLoading = false;
         state.success = false;
-        state.error = action.payload;
+        state.createOrderError = action.payload;
+      })
+
+      // GET ALL MY ORDERS
+      .addCase(getAllMyOrder.pending, (state) => {
+        state.myOrdersLoading = true;
+        state.myOrdersError = null;
+      })
+      .addCase(getAllMyOrder.fulfilled, (state, action) => {
+        state.myOrdersLoading = false;
+        state.orders = action.payload;
+      })
+      .addCase(getAllMyOrder.rejected, (state, action) => {
+        state.myOrdersLoading = false;
+        state.myOrdersError = action.payload;
       });
   },
 });
 
 export const { resetOrderState } = orderSlice.actions;
-
 export default orderSlice.reducer;

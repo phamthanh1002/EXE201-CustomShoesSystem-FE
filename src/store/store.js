@@ -6,10 +6,12 @@ import feedbackReducer from './slices/feedbackSlice';
 import serviceReducer from './slices/serviceSlice';
 import cartReducer from './slices/cartSlice';
 import orderReducer from './slices/orderSlice';
+import customerAddressReduce from './slices/customerAddressSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    address: customerAddressReduce,
     products: productReducer,
     filterProduct: filterProductReducer,
     feedbacks: feedbackReducer,

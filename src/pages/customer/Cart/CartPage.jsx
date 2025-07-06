@@ -29,6 +29,9 @@ import useAuth from '../../../hooks/useAuth';
 import useOrder from '../../../hooks/useOrder';
 import { formatOrderData } from '../../../utils/orderUtils';
 import { useNavigate } from 'react-router-dom';
+import AddAddressModal from '../../../components/common/AddAddressModal';
+import useCustomerAddress from '../../../hooks/useCustomerAddress';
+import TermOfProduct from '../../../components/common/TermOfProduct';
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -40,18 +43,34 @@ const steps = [
 ];
 
 const CartPage = () => {
-  const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
   const [currentStep, setCurrentStep] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClearAllModalOpen, setIsClearAllModalOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [agreed, setAgreed] = useState(false);
-  const navigate = useNavigate();
+  const [isAddAddressModalOpen, setIsAddAddressModalOpen] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+
+  const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { createAddresses, fetchAddresses } = useCustomerAddress();
   const { submitOrder } = useOrder();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const defaultAddress = user?.address?.find((addr) => addr.isDefault);
   const [selectedAddress, setSelectedAddress] = useState(defaultAddress?.fullAddress || '');
+
+  const handleAddAddress = async (values, resetForm) => {
+    const result = await createAddresses(values);
+    if (result.meta.requestStatus === 'fulfilled') {
+      toast.success('Thêm địa chỉ thành công!');
+      fetchAddresses();
+      resetForm(); // reset form từ modal
+      setIsAddAddressModalOpen(false);
+    } else {
+      toast.error('Thêm địa chỉ thất bại!');
+    }
+  };
 
   const handleCreateOrder = async () => {
     const formData = formatOrderData(cartItems, selectedAddress);
@@ -417,10 +436,11 @@ const CartPage = () => {
                 <div style={{ margin: '15px 0' }}>
                   <Checkbox onChange={(e) => setAgreed(e.target.checked)}>
                     Tôi đồng ý với{' '}
-                    <a href="#" style={{ color: '#667eea' }}>
+                    <a href="#" style={{ color: '#667eea' }} onClick={() => setShowTerms(true)}>
                       điều khoản sản phẩm
                     </a>
                   </Checkbox>
+                  <TermOfProduct visible={showTerms} onCancel={() => setShowTerms(false)} />
 
                   {currentStep === 0 && (
                     <Button
@@ -482,26 +502,48 @@ const CartPage = () => {
                   </div>
 
                   <div style={{ marginBottom: 10 }}>
-                    <Text strong>Địa chỉ giao hàng</Text>
-                    <Select
-                      showSearch
-                      style={{ marginTop: 6, width: '100%' }}
-                      placeholder="Chọn địa chỉ"
-                      value={selectedAddress}
-                      onChange={(value) => setSelectedAddress(value)}
-                      optionFilterProp="children"
-                      filterOption={(input, option) =>
-                        option.children.toLowerCase().includes(input.toLowerCase())
-                      }
-                      size="large"
-                      dropdownStyle={{ borderRadius: 8 }}
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
                     >
-                      {user?.address?.map((addr) => (
-                        <Option key={addr.addressID} value={addr.fullAddress}>
-                          {addr.fullAddress}
-                        </Option>
-                      ))}
-                    </Select>
+                      <Text strong>Địa chỉ giao hàng</Text>
+
+                      <Button
+                        type="primary"
+                        onClick={() => setIsAddAddressModalOpen(true)}
+                        style={{ marginTop: 10, backgroundColor: 'black' }}
+                      >
+                        + Thêm địa chỉ
+                      </Button>
+                    </div>
+                    {user?.address?.length > 0 ? (
+                      <Select
+                        showSearch
+                        style={{ marginTop: 6, width: '100%' }}
+                        placeholder="Chọn địa chỉ"
+                        value={selectedAddress}
+                        onChange={(value) => setSelectedAddress(value)}
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().includes(input.toLowerCase())
+                        }
+                        size="large"
+                        dropdownStyle={{ borderRadius: 8 }}
+                      >
+                        {user.address.map((addr) => (
+                          <Option key={addr.addressID} value={addr.fullAddress}>
+                            {addr.fullAddress}
+                          </Option>
+                        ))}
+                      </Select>
+                    ) : (
+                      <Typography.Text type="warning">
+                        Bạn chưa có địa chỉ nào. Vui lòng thêm địa chỉ mới.
+                      </Typography.Text>
+                    )}
                   </div>
                 </Col>
 
@@ -660,6 +702,12 @@ const CartPage = () => {
       >
         <p>Bạn có chắc chắn muốn xóa toàn bộ sản phẩm khỏi giỏ hàng?</p>
       </Modal>
+      <AddAddressModal
+        visible={isAddAddressModalOpen}
+        onCancel={() => setIsAddAddressModalOpen(false)}
+        onSubmit={handleAddAddress}
+        loading={false}
+      />
     </Layout>
   );
 };
