@@ -4,8 +4,8 @@ const InfinityText = lazy(() => import('./InfinityText'));
 const ImageBanner = lazy(() => import('./ImageBanner'));
 const AboutUs = lazy(() => import('./AboutUs'));
 const BestSeller = lazy(() => import('./BestSeller'));
-const Feedback = lazy(() => import('./Feedback'));
-const News = lazy(() => import('./News'));
+const Feedback = lazy(() => import('./Feedback'));  
+const Maps = lazy(() => import('./Maps'));
 
 export default function HomePage() {
   return (
@@ -15,7 +15,7 @@ export default function HomePage() {
       <AboutUs />
       <BestSeller />
       <Feedback />
-      <News />
+      <Maps />
     </Suspense>
   );
 }

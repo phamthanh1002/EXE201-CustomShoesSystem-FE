@@ -51,7 +51,7 @@ function SideBarProfile({activeTab, setActiveTab, user}) {
                 icon={<UserOutlined />}
                 />
                 <Title level={4} style={{ marginBottom: '8px' }}>{user.name}</Title>
-                <Text type="secondary">Member since 2023</Text>
+                {/* <Text type="secondary">Member since 2023</Text> */}
                 <div style={{ marginTop: '8px' }}>
                 <Rate disabled defaultValue={5} style={{ fontSize: '16px' }} />
                 <br />

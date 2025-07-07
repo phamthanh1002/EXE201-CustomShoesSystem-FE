@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
-import { API_CREATE_ORDER, API_GET_ALL_MY_ORDER } from '../../constant';
+import { API_CREATE_ORDER, API_GET_ALL_MY_ORDER, API_GET_ORDER_DETAIL } from '../../constant';
 
 export const createOrder = createAsyncThunk(
   'order/create',
@@ -30,9 +30,24 @@ export const getAllMyOrder = createAsyncThunk(
   },
 );
 
+export const getOrderDetail = createAsyncThunk(
+  'order/order-detail',
+  async (orderID, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.get(API_GET_ORDER_DETAIL.replace(':orderID', orderID));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || 'Load chi tiết đơn hàng thất bại!',
+      );
+    }
+  },
+);
+
 // 🧊 Initial State
 const initialState = {
   orders: [],
+  orderDetailData: {},
   orderData: null,
   paymentUrl: null,
   message: '',
@@ -43,6 +58,9 @@ const initialState = {
 
   myOrdersLoading: false,
   myOrdersError: null,
+
+  orderDetailLoading: false,
+  orderDetailError: null,
 };
 
 const orderSlice = createSlice({
@@ -90,6 +108,21 @@ const orderSlice = createSlice({
       .addCase(getAllMyOrder.rejected, (state, action) => {
         state.myOrdersLoading = false;
         state.myOrdersError = action.payload;
+      })
+
+      // GET ORDER DETAIL
+      .addCase(getOrderDetail.pending, (state) => {
+        state.orderDetailLoading = true;
+        state.orderDetailError = null;
+      })
+      .addCase(getOrderDetail.fulfilled, (state, action) => {
+        state.orderDetailLoading = false;
+        const orderID = action.meta.arg; 
+        state.orderDetailData[orderID] = action.payload;
+      })
+      .addCase(getOrderDetail.rejected, (state, action) => {
+        state.orderDetailLoading = false;
+        state.orderDetailError = action.payload;
       });
   },
 });

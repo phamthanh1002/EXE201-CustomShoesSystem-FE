@@ -1,12 +1,18 @@
 // hooks/useOrder.js
 import { useDispatch, useSelector } from 'react-redux';
-import { createOrder, getAllMyOrder, resetOrderState } from '../store/slices/orderSlice';
+import {
+  createOrder,
+  getAllMyOrder,
+  getOrderDetail,
+  resetOrderState,
+} from '../store/slices/orderSlice';
 
 const useOrder = () => {
   const dispatch = useDispatch();
 
   const {
     orders,
+    orderDetailData,
     orderData,
     paymentUrl,
     message,
@@ -17,6 +23,9 @@ const useOrder = () => {
 
     myOrdersLoading,
     myOrdersError,
+
+    orderDetailLoading,
+    orderDetailError,
   } = useSelector((state) => state.order);
 
   const submitOrder = (formData) => {
@@ -31,11 +40,16 @@ const useOrder = () => {
     dispatch(resetOrderState());
   };
 
+  const fetchOrderDetail = (orderID) => {
+    return dispatch(getOrderDetail(orderID));
+  };
+
   return {
     // Actions
     submitOrder,
     fetchMyOrders,
     resetOrder,
+    fetchOrderDetail,
 
     // Create Order State
     createOrderLoading,
@@ -49,6 +63,11 @@ const useOrder = () => {
     orders,
     myOrdersLoading,
     myOrdersError,
+
+    // Order Detail State
+    orderDetailData,
+    orderDetailLoading,
+    orderDetailError,
   };
 };
 

@@ -48,7 +48,7 @@ export default function Feedback() {
                 style={{ padding: '1.5rem 2rem 1.5rem 2.5rem' }}
                 justify="center"
               >
-                {feedbacks.map((review, idx) => (
+                {group.map((review, idx) => (
                   <Col
                     key={idx}
                     xs={24}
