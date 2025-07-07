@@ -77,12 +77,15 @@ function App() {
             <Route path="custom" element={LazyWrapper(ShoeCustomPage)} />
             <Route path="cleaning" element={LazyWrapper(ShoeCleaningPage)} />
             <Route path="accessories" element={LazyWrapper(ShoeAccessoriesPage)} />
-            <Route path="cart" element={LazyWrapper(CartPage)} />
-            <Route path="payment-success" element={LazyWrapper(PaymentSuccess)} />
-            <Route path="payment-failure" element={LazyWrapper(PaymentFailure)} />
-            <Route path="profile" element={LazyWrapper(ProfilePage)} />
             <Route path="search" element={LazyWrapper(SearchResultPage)} />
-            <Route path="order-create-success" element={LazyWrapper(OrderCreateSuccess)} />
+            <Route path="cart" element={LazyWrapper(CartPage)} />
+
+            <Route element={<ProtectedRoute allowedRoles={['Customer']} />}>
+              <Route path="profile" element={LazyWrapper(ProfilePage)} />
+              <Route path="payment-success" element={LazyWrapper(PaymentSuccess)} />
+              <Route path="payment-failure" element={LazyWrapper(PaymentFailure)} />
+              <Route path="order-create-success" element={LazyWrapper(OrderCreateSuccess)} />
+            </Route>
           </Route>
 
           {/* Staff */}

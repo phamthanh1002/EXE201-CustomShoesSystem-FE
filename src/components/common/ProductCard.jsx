@@ -13,14 +13,16 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import RevealOnScroll from '../../utils/RevealOnScroll';
 import useCart from '../../hooks/useCart';
+import useBookmark from '../../hooks/useBookmark';
 
 const { Title, Text, Paragraph } = Typography;
 
 export default function ProductCard({ product }) {
   const [quantity, setQuantity] = useState(1);
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const navigate = useNavigate();
   const { token, refreshToken, user } = useAuth();
+  const { isBookmarked, toggle } = useBookmark();
+  const [isProcessingBookmark, setIsProcessingBookmark] = useState(false);
   const { addToCart } = useCart();
 
   if (!product) return null;
@@ -42,6 +44,23 @@ export default function ProductCard({ product }) {
   } = product;
 
   const totalPrice = total * quantity;
+
+  const bookmarked = isBookmarked(productID);
+
+  const handleToggleBookmark = () => {
+    setIsProcessingBookmark(true);
+    toggle(product);
+
+    setTimeout(() => {
+      setIsProcessingBookmark(false);
+
+      if (bookmarked) {
+        toast.info('Đã xóa khỏi danh sách yêu thích.');
+      } else {
+        toast.success('Đã thêm vào danh sách yêu thích!');
+      }
+    }, 200);
+  };
 
   const handleAddToCart = () => {
     if (!token && !refreshToken && !user) {
@@ -228,7 +247,7 @@ export default function ProductCard({ product }) {
 
           <div style={{ position: 'relative' }}>
             <div
-              onClick={() => setIsBookmarked(!isBookmarked)}
+              onClick={handleToggleBookmark}
               style={{
                 position: 'absolute',
                 top: 8,
@@ -244,10 +263,10 @@ export default function ProductCard({ product }) {
                 justifyContent: 'center',
                 boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
                 transition: 'all 0.3s ease',
-                transform: isBookmarked ? 'scale(1.1)' : 'scale(1)',
+                transform: bookmarked ? 'scale(1.1)' : 'scale(1)',
               }}
             >
-              {isBookmarked ? (
+              {bookmarked ? (
                 <HeartFilled style={{ color: 'red', fontSize: 18 }} />
               ) : (
                 <HeartOutlined style={{ color: 'black', fontSize: 18 }} />
@@ -331,7 +350,7 @@ export default function ProductCard({ product }) {
             }}
             onClick={handleAddToCart}
           >
-            Thêm vào giỏ hàng
+            Thêm vào giỏ
           </Button>
         </Card>
       </Tooltip>

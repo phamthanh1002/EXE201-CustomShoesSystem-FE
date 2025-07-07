@@ -58,7 +58,7 @@ const ScrollToTopButton = () => {
           width: "48px",
           height: "48px",
           cursor: "pointer",
-          zIndex: 1000,
+          zIndex: 9999,
           ...glowAnimation,
         }}
         aria-label="Scroll to top"

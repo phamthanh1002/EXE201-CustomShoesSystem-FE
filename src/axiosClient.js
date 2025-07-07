@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 let isRefreshing = false;
@@ -21,13 +21,13 @@ const processQueue = (error, token = null) => {
 // Add token to request
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Handle 401: refresh token
@@ -40,8 +40,8 @@ axiosClient.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url.includes("/auth/login") &&
-      !originalRequest.url.includes("/auth/token/refresh")
+      !originalRequest.url.includes('/auth/login') &&
+      !originalRequest.url.includes('/auth/token/refresh')
     ) {
       originalRequest._retry = true;
 
@@ -58,16 +58,16 @@ axiosClient.interceptors.response.use(
 
       isRefreshing = true;
 
-      const refreshToken = localStorage.getItem("refreshToken");
+      const refreshToken = localStorage.getItem('refreshToken');
 
       try {
-        const response = await axiosClient.post("/auth/token/refresh", {
+        const response = await axiosClient.post('/auth/token/refresh', {
           refreshToken,
         });
 
         const newToken = response.data.token;
 
-        localStorage.setItem("token", newToken);
+        localStorage.setItem('token', newToken);
         axiosClient.defaults.headers.Authorization = `Bearer ${newToken}`;
 
         processQueue(null, newToken);
@@ -77,7 +77,7 @@ axiosClient.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
         localStorage.clear();
-        // window.location.href = "/login";
+        window.location.href = '/login';
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
@@ -85,7 +85,7 @@ axiosClient.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosClient;

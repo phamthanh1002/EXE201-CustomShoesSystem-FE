@@ -1,9 +1,7 @@
 import {
   CreditCardOutlined,
-  DeleteOutlined,
   EditOutlined,
   EnvironmentOutlined,
-  HeartOutlined,
   MailOutlined,
   PhoneOutlined,
   ShoppingOutlined,
@@ -25,7 +23,7 @@ import {
   Tag,
   Typography,
   Popconfirm,
-  Modal,
+  Pagination,
 } from 'antd';
 import { useEffect, useState } from 'react';
 import useCustomerAddress from '../../../hooks/useCustomerAddress';
@@ -33,19 +31,15 @@ import AddAddressModal from '../../../components/common/AddAddressModal';
 import { toast } from 'react-toastify';
 import EditAddressModal from '../../../components/common/EditAddressModal';
 import useOrder from '../../../hooks/useOrder';
+import useAuth from '../../../hooks/useAuth';
+import FeedbackFormModal from '../../../components/common/FeedbackFormModal';
+import useFeedback from '../../../hooks/useFeedback';
+import useBookmark from '../../../hooks/useBookmark';
+import ProductCard from '../../../components/common/ProductCard';
 const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 
-function ProfileTabs({
-  activeTab,
-  setActiveTab,
-  orderColumns,
-  wishlistData,
-  orderData,
-  isEditing,
-  form,
-  user,
-}) {
+function ProfileTabs({ activeTab, setActiveTab, form, user }) {
   const {
     addresses,
     createAddresses,
@@ -58,8 +52,128 @@ function ProfileTabs({
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedAddressToEdit, setSelectedAddressToEdit] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
   const [addForm] = Form.useForm();
-  const { orders, fetchMyOrders } = useOrder();
+  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [currentFeedbackItem, setCurrentFeedbackItem] = useState(null);
+  const { orders, orderDetailData, fetchMyOrders, fetchOrderDetail } = useOrder();
+  const { updateProfile, token, refreshToken } = useAuth();
+  const {
+    submitCustomFeedback,
+    submitAccessoryFeedback,
+    submitCleaningFeedback,
+    customFeedbackLoading,
+    accessoryFeedbackLoading,
+    cleaningFeedbackLoading,
+  } = useFeedback();
+  const { bookmarks, toggle } = useBookmark();
+
+  const openFeedbackModal = (item) => {
+    setCurrentFeedbackItem(item);
+    setFeedbackModalVisible(true);
+  };
+
+  const handleSubmitFeedback = (formValues) => {
+    const type = currentFeedbackItem.productType || 'Cleaning';
+
+    let payload;
+
+    if (type === 'Custom' || type === 'Accessory') {
+      payload = {
+        ...formValues,
+        productID: currentFeedbackItem.productID,
+      };
+    } else {
+      payload = {
+        ...formValues,
+        packageID: currentFeedbackItem.packageID,
+      };
+    }
+
+    const actionMap = {
+      Custom: submitCustomFeedback,
+      Accessory: submitAccessoryFeedback,
+      Cleaning: submitCleaningFeedback,
+    };
+
+    const submitFn = actionMap[type];
+
+    submitFn(payload)
+      .unwrap()
+      .then(() => {
+        toast.success('Gửi feedback thành công!');
+
+        setCurrentFeedbackItem((prev) => ({
+          ...prev,
+          feedbackGiven: true,
+        }));
+      })
+      .catch((err) => toast.error('Lỗi: ' + err))
+      .finally(() => {
+        setFeedbackModalVisible(false);
+      });
+  };
+
+  const orderColumns = [
+    {
+      title: 'STT',
+      key: 'index',
+      render: (text, record, index) => `#${index + 1}`,
+    },
+    {
+      title: 'Ngày đặt hàng',
+      dataIndex: 'orderDate',
+      key: 'orderDate',
+      render: (date) => new Date(date).toLocaleString('vi-VN'),
+    },
+    {
+      title: 'Địa chỉ giao hàng',
+      dataIndex: 'deliveryAddress',
+      key: 'deliveryAddress',
+    },
+    {
+      title: 'Tổng tiền',
+      dataIndex: 'totalAmount',
+      key: 'totalAmount',
+      render: (amount) => (
+        <Text strong style={{ color: '#52c41a' }}>
+          {amount.toLocaleString('vi-VN')} VND
+        </Text>
+      ),
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => {
+        let color = 'default';
+
+        switch (status) {
+          case 'Đã đặt hàng':
+            color = 'blue';
+            break;
+          case 'Đang đến lấy hàng':
+          case 'Đã lấy hàng':
+            color = 'cyan';
+            break;
+          case 'Đang thực hiện':
+          case 'Chờ vận chuyển':
+          case 'Đang giao hàng':
+            color = 'orange';
+            break;
+          case 'Đã giao đơn hàng':
+            color = 'green';
+            break;
+          default:
+            color = 'red';
+        }
+
+        return <Tag color={color}>{status}</Tag>;
+      },
+    },
+  ];
 
   useEffect(() => {
     fetchMyOrders(user.userID);
@@ -67,9 +181,29 @@ function ProfileTabs({
 
   const totalOrder = orders.filter((ord) => ord.status !== 'Failed');
 
+  console.log('total', totalOrder);
+
   const totalMoneySpend = totalOrder.reduce((acc, ord) => acc + ord.totalAmount, 0);
 
   const pointEarned = totalMoneySpend / 1000;
+
+  const handleSaveProfile = async (values) => {
+    const { name, phone } = values;
+
+    const formData = {
+      name,
+      phoneNumber: phone,
+    };
+
+    const result = await updateProfile(user.email, formData);
+
+    if (result.meta.requestStatus === 'fulfilled') {
+      toast.success('Cập nhật thông tin thành công!');
+      setIsEditing(false);
+    } else {
+      toast.error('Cập nhật thông tin thất bại: ' + result.payload);
+    }
+  };
 
   const handleEditAddress = (address) => {
     setSelectedAddressToEdit(address);
@@ -108,21 +242,6 @@ function ProfileTabs({
 
   const handleAddCancel = () => {
     setIsAddModalOpen(false);
-  };
-
-  const handleAddSubmit = () => {
-    addForm.validateFields().then((values) => {
-      createAddresses(values)
-        .unwrap()
-        .then(() => {
-          toast.success('Thêm địa chỉ thành công!');
-          setIsAddModalOpen(false);
-          fetchAddresses();
-        })
-        .catch((err) => {
-          toast.error('Thêm địa chỉ thất bại: ' + err);
-        });
-    });
   };
 
   useEffect(() => {
@@ -174,7 +293,7 @@ function ProfileTabs({
           <Card
             title="Thông tin cá nhân"
             extra={
-              <Button type="link" icon={<EditOutlined />}>
+              <Button type="link" icon={<EditOutlined />} onClick={() => setIsEditing(!isEditing)}>
                 {isEditing ? 'Hủy' : 'Chỉnh sửa'}
               </Button>
             }
@@ -199,8 +318,12 @@ function ProfileTabs({
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12}>
-                    <Form.Item label="Email" name="email">
-                      <Input />
+                    <Form.Item
+                      label="Email"
+                      name="email"
+                      help={<span style={{ color: '#FBCB66' }}>* Không thể chỉnh sửa email</span>}
+                    >
+                      <Input disabled />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12}>
@@ -211,7 +334,7 @@ function ProfileTabs({
                 </Row>
                 <Form.Item>
                   <Space>
-                    <Button type="primary" htmlType="submit">
+                    <Button style={{ backgroundColor: 'black', color: 'white' }} htmlType="submit">
                       Lưu thay đổi
                     </Button>
                     <Button onClick={() => setIsEditing(false)}>Hủy</Button>
@@ -340,47 +463,152 @@ function ProfileTabs({
         {/* Orders Tab */}
         <TabPane tab="Đơn hàng" key="2">
           <Card title="Lịch sử đơn hàng">
-            <Table columns={orderColumns} dataSource={orderData} pagination={{ pageSize: 10 }} />
+            <Table
+              columns={orderColumns}
+              dataSource={totalOrder}
+              rowKey="orderID"
+              pagination={{ pageSize: 10 }}
+              expandable={{
+                expandedRowRender: (record) => {
+                  const detail = orderDetailData?.[record.orderID];
+
+                  if (!detail) return <Text type="secondary">Đang tải chi tiết đơn hàng...</Text>;
+
+                  return (
+                    <Card
+                      title={
+                        <Text style={{ color: '#F5F5F5', fontSize: 18, fontWeight: 600 }}>
+                          Chi tiết đơn hàng
+                        </Text>
+                      }
+                      bordered={false}
+                      style={{
+                        backgroundColor: '#1A1D24',
+                        borderRadius: '12px',
+                        padding: '8px',
+                      }}
+                      headStyle={{ borderBottom: '1px solid #2A2D33' }}
+                    >
+                      <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                        {detail.map((item) => {
+                          const isFeedbackGiven = item.rating != null;
+
+                          return (
+                            <div
+                              key={item.orderDetailID}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                padding: '16px',
+                                backgroundColor: '#2A2D33',
+                                borderRadius: '8px',
+                                transition: 'all 0.3s ease',
+                              }}
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.backgroundColor = '#3A3F4B';
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.backgroundColor = '#2A2D33';
+                              }}
+                            >
+                              {/* Trái: Tên & SL */}
+                              <div>
+                                <Text
+                                  strong
+                                  style={{
+                                    fontSize: 16,
+                                    color: '#F5F5F5',
+                                    display: 'block',
+                                    marginBottom: 4,
+                                  }}
+                                >
+                                  {item.productName || item.packageName}
+                                </Text>
+                                <Text style={{ color: '#BFBFBF' }}>SL: {item.quantity}</Text>
+                              </div>
+
+                              {/* Phải: Tổng tiền & Feedback */}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+                                <Text style={{ fontSize: 16, color: '#FFFFFF', fontWeight: 600 }}>
+                                  {item.total.toLocaleString('vi-VN')} VND
+                                </Text>
+
+                                {record.status === 'Đã giao đơn hàng' && !isFeedbackGiven && (
+                                  <Button
+                                    size="small"
+                                    icon={<StarOutlined />}
+                                    onClick={() => openFeedbackModal(item)}
+                                    style={{
+                                      borderColor: 'yellowgreen',
+                                      color: '#FFFFFF',
+                                      background: 'transparent',
+                                    }}
+                                  >
+                                    Feedback
+                                  </Button>
+                                )}
+
+                                {isFeedbackGiven && (
+                                  <Tag color="green" icon={<StarOutlined />}>
+                                    Đã feedback
+                                  </Tag>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </Space>
+                    </Card>
+                  );
+                },
+                onExpand: (expanded, record) => {
+                  if (expanded && !orderDetailData?.[record.orderID]) {
+                    fetchOrderDetail(record.orderID);
+                  }
+                },
+              }}
+            />
           </Card>
+          {currentFeedbackItem && (
+            <FeedbackFormModal
+              visible={feedbackModalVisible}
+              onCancel={() => setFeedbackModalVisible(false)}
+              onSubmit={handleSubmitFeedback}
+              productID={currentFeedbackItem.productID}
+              loading={customFeedbackLoading || accessoryFeedbackLoading || cleaningFeedbackLoading}
+            />
+          )}
         </TabPane>
 
         {/* Wishlist Tab */}
         <TabPane tab="Yêu thích" key="3">
-          <Card title="Danh sách yêu thích">
-            <Row gutter={[16, 16]}>
-              {wishlistData.map((item) => (
-                <Col xs={24} sm={12} lg={8} key={item.id}>
-                  <Card
-                    hoverable
-                    cover={<Image height={200} src={item.image} style={{ objectFit: 'cover' }} />}
-                    actions={[
-                      <HeartOutlined key="heart" style={{ color: '#ff4d4f' }} />,
-                      <Button
-                        type={item.inStock ? 'primary' : 'default'}
-                        disabled={!item.inStock}
-                        size="small"
-                      >
-                        {item.inStock ? 'Thêm vào giỏ' : 'Hết hàng'}
-                      </Button>,
-                    ]}
-                  >
-                    <Card.Meta
-                      title={item.name}
-                      description={
-                        <Space direction="vertical" size="small">
-                          <Text strong style={{ color: '#1890ff' }}>
-                            {item.price} VND
-                          </Text>
-                          <Tag color={item.inStock ? 'green' : 'red'}>
-                            {item.inStock ? 'Còn hàng' : 'Hết hàng'}
-                          </Tag>
-                        </Space>
-                      }
-                    />
-                  </Card>
-                </Col>
-              ))}
-            </Row>
+          <Card title="Danh sách sản phẩm đã yêu thích">
+            {bookmarks.length === 0 ? (
+              <Text type="secondary">Bạn chưa có sản phẩm yêu thích nào.</Text>
+            ) : (
+              <>
+                <Row gutter={[16, 16]}>
+                  {bookmarks
+                    .slice((currentPage - 1) * pageSize, currentPage * pageSize)
+                    .map((item) => (
+                      <Col xs={24} sm={12} lg={8} key={item.productID}>
+                        <ProductCard product={item} />
+                      </Col>
+                    ))}
+                </Row>
+
+                <div style={{ textAlign: 'center', marginTop: 24 }}>
+                  <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={bookmarks.length}
+                    onChange={(page) => setCurrentPage(page)}
+                    showSizeChanger={false}
+                  />
+                </div>
+              </>
+            )}
           </Card>
         </TabPane>
       </Tabs>

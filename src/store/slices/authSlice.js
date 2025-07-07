@@ -1,7 +1,7 @@
 // src/store/slices/authSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
-import { API_LOGIN, API_REGISTER } from '../../constant';
+import { API_EDIT_PROFILE, API_LOGIN, API_REGISTER } from '../../constant';
 
 const storedUser = localStorage.getItem('user');
 const storedToken = localStorage.getItem('token');
@@ -31,6 +31,18 @@ export const registerUser = createAsyncThunk(
   },
 );
 
+export const editProfile = createAsyncThunk(
+  'user/edit-profile',
+  async ({ email, formData }, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.put(API_EDIT_PROFILE.replace('email', email), formData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || 'Cập nhật thông tin cá nhân thất bại!');
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -51,6 +63,7 @@ const authSlice = createSlice({
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('cart');
+      localStorage.removeItem('bookmarkedProducts');
     },
     setGoogleLoginSuccess(state, action) {
       const { user, token, refreshToken } = action.payload;
@@ -102,6 +115,24 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // editProfile
+      .addCase(editProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = {
+          ...state.user,
+          ...action.payload,
+        };
+        localStorage.setItem('user', JSON.stringify(state.user));
+      })
+      .addCase(editProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

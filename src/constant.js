@@ -1,6 +1,7 @@
 //APIs Auth
 export const API_LOGIN = '/auth/login';
 export const API_REGISTER = '/auth/register';
+export const API_EDIT_PROFILE = '/admin/users/email/profile';
 
 //APIs Customer Address
 export const API_CREATE_ADDRESS = '/CustomerAddresses';
@@ -20,6 +21,9 @@ export const API_SEARCH_PRODUCT = '/Product/search?';
 
 //APIs Feedback Product
 export const API_GET_ALL_FEEDBACK = '/Feedback/all';
+export const API_CREATE_FEEDBACK_CUSTOM = '/Feedback/custom'
+export const API_CREATE_FEEDBACK_ACCESSORY = '/Feedback/accessory'
+export const API_CREATE_FEEDBACK_CLEANING= '/Feedback/cleaning'
 
 //APIs Service
 export const API_GET_ALL_SERVICE = '/ServicePackage';
@@ -27,3 +31,4 @@ export const API_GET_ALL_SERVICE = '/ServicePackage';
 //APIs Orders
 export const API_CREATE_ORDER = '/Order/create-order';
 export const API_GET_ALL_MY_ORDER = '/Order/user/:id';
+export const API_GET_ORDER_DETAIL = '/OrderDetail/order/:orderID';

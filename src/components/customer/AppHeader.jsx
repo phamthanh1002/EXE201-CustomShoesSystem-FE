@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import SearchBar from '../common/SearchBar';
 import { useState, useEffect } from 'react';
 import useCart from '../../hooks/useCart';
+import useBookmark from '../../hooks/useBookmark';
 
 const { useBreakpoint } = Grid;
 const { Header } = Layout;
@@ -25,6 +26,9 @@ const AppHeader = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { user, logout } = useAuth();
   const { cartItems } = useCart();
+  const { bookmarks } = useBookmark();
+
+  // console.log(bookmarks);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -123,9 +127,11 @@ const AppHeader = () => {
           onSearch={handleSearch}
         />
 
-        <Badge count={2} size="small">
-          <HeartOutlined style={{ fontSize: 20 }} />
-        </Badge>
+        <Link to="/profile">
+          <Badge count={bookmarks.length} size="small">
+            <HeartOutlined style={{ fontSize: 20 }} />
+          </Badge>
+        </Link>
 
         <Link to="/cart">
           <Badge count={cartItems.length} size="small">
