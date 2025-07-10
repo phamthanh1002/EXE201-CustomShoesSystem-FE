@@ -30,8 +30,10 @@ const ProfilePage = lazy(() => import('./pages/customer/Profile/Profile'));
 const SearchResultPage = lazy(() => import('./pages/customer/Search/SearchResultPage'));
 const OrderCreateSuccess = lazy(() => import('./pages/customer/Order/OrderCreateSuccess'));
 
-// Staff & Admin
+// Staff
+const StaffLayout = lazy(() => import('./layouts/StaffLayout'));
 const StaffHome = lazy(() => import('./pages/staff/StaffHome'));
+//Admin
 const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
 
 function App() {
@@ -90,7 +92,9 @@ function App() {
 
           {/* Staff */}
           <Route element={<ProtectedRoute allowedRoles={['Staff']} />}>
-            <Route path="/staff" element={LazyWrapper(StaffHome)} />
+            <Route path="/staff" element={LazyWrapper(StaffLayout)}>
+              <Route index element={LazyWrapper(StaffHome)} />
+            </Route>
           </Route>
 
           {/* Admin */}

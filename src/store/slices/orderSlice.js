@@ -1,6 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
-import { API_CREATE_ORDER, API_GET_ALL_MY_ORDER, API_GET_ORDER_DETAIL } from '../../constant';
+import {
+  API_CREATE_ORDER,
+  API_GET_ALL_MY_ORDER,
+  API_GET_ALL_ORDER,
+  API_GET_ORDER_DETAIL,
+  API_ORDER_PENDING_SHIP,
+  API_ORDER_START_PROCESSING,
+} from '../../constant';
 
 export const createOrder = createAsyncThunk(
   'order/create',
@@ -17,7 +24,7 @@ export const createOrder = createAsyncThunk(
 );
 
 export const getAllMyOrder = createAsyncThunk(
-  'order/get-all',
+  'order/my-get-all',
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axiosClient.get(API_GET_ALL_MY_ORDER.replace(':id', userId));
@@ -44,14 +51,61 @@ export const getOrderDetail = createAsyncThunk(
   },
 );
 
+export const getAllOrder = createAsyncThunk('order/get-all', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosClient.get(API_GET_ALL_ORDER);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(
+      error?.response?.data?.message || error?.message || 'Load đơn hàng thất bại!',
+    );
+  }
+});
+
+export const startProcessingOrder = createAsyncThunk(
+  'order/start-processing',
+  async (orderID, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.put(API_ORDER_START_PROCESSING.replace(':id', orderID));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message ||
+          error?.message ||
+          'Cập nhật trạng thái đang thực hiện thất bại!',
+      );
+    }
+  },
+);
+
+export const pendingShipOrder = createAsyncThunk(
+  'order/pending-ship',
+  async (orderID, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.put(API_ORDER_PENDING_SHIP.replace(':id', orderID));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message ||
+          error?.message ||
+          'Cập nhật trạng thái chờ vận chuyển thất bại!',
+      );
+    }
+  },
+);
+
 // 🧊 Initial State
 const initialState = {
+  allOrders: [],
   orders: [],
   orderDetailData: {},
   orderData: null,
   paymentUrl: null,
   message: '',
   success: false,
+
+  allOrderLoading: false,
+  allOrderError: null,
 
   createOrderLoading: false,
   createOrderError: null,
@@ -61,6 +115,12 @@ const initialState = {
 
   orderDetailLoading: false,
   orderDetailError: null,
+
+  startProcessingLoading: false,
+  startProcessingError: null,
+
+  pendingShipLoading: false,
+  pendingShipError: null,
 };
 
 const orderSlice = createSlice({
@@ -96,7 +156,7 @@ const orderSlice = createSlice({
         state.createOrderError = action.payload;
       })
 
-      // GET ALL MY ORDERS
+      // GET MY ORDERS
       .addCase(getAllMyOrder.pending, (state) => {
         state.myOrdersLoading = true;
         state.myOrdersError = null;
@@ -117,12 +177,52 @@ const orderSlice = createSlice({
       })
       .addCase(getOrderDetail.fulfilled, (state, action) => {
         state.orderDetailLoading = false;
-        const orderID = action.meta.arg; 
+        const orderID = action.meta.arg;
         state.orderDetailData[orderID] = action.payload;
       })
       .addCase(getOrderDetail.rejected, (state, action) => {
         state.orderDetailLoading = false;
         state.orderDetailError = action.payload;
+      })
+
+      // GET ALL ORDER
+      .addCase(getAllOrder.pending, (state) => {
+        state.allOrderLoading = true;
+        state.allOrderError = null;
+      })
+      .addCase(getAllOrder.fulfilled, (state, action) => {
+        state.allOrderLoading = false;
+        state.allOrders = action.payload;
+      })
+      .addCase(getAllOrder.rejected, (state, action) => {
+        state.allOrderLoading = false;
+        state.allOrderError = action.payload;
+      })
+
+      // start processing order
+      .addCase(startProcessingOrder.pending, (state) => {
+        state.startProcessingLoading = true;
+        state.startProcessingError = null;
+      })
+      .addCase(startProcessingOrder.fulfilled, (state) => {
+        state.startProcessingLoading = false;
+      })
+      .addCase(startProcessingOrder.rejected, (state, action) => {
+        state.startProcessingLoading = false;
+        state.startProcessingError = action.payload;
+      })
+
+      // pending ship order
+      .addCase(pendingShipOrder.pending, (state) => {
+        state.pendingShipLoading = true;
+        state.pendingShipError = null;
+      })
+      .addCase(pendingShipOrder.fulfilled, (state) => {
+        state.pendingShipLoading = false;
+      })
+      .addCase(pendingShipOrder.rejected, (state, action) => {
+        state.pendingShipLoading = false;
+        state.pendingShipError = action.payload;
       });
   },
 });

@@ -4,6 +4,7 @@ import {
   EnvironmentOutlined,
   MailOutlined,
   PhoneOutlined,
+  ReloadOutlined,
   ShoppingOutlined,
   StarOutlined,
 } from '@ant-design/icons';
@@ -54,6 +55,10 @@ function ProfileTabs({ activeTab, setActiveTab, form, user }) {
   const [selectedAddressToEdit, setSelectedAddressToEdit] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortedInfo, setSortedInfo] = useState({
+    columnKey: 'orderDate',
+    order: 'descend',
+  });
   const pageSize = 6;
   const [addForm] = Form.useForm();
   const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
@@ -116,6 +121,10 @@ function ProfileTabs({ activeTab, setActiveTab, form, user }) {
       });
   };
 
+  const reloadTable = async () => {
+    await fetchMyOrders(user.userID);
+  };
+
   const orderColumns = [
     {
       title: 'STT',
@@ -126,6 +135,9 @@ function ProfileTabs({ activeTab, setActiveTab, form, user }) {
       title: 'Ngày đặt hàng',
       dataIndex: 'orderDate',
       key: 'orderDate',
+      sorter: (a, b) => new Date(a.orderDate) - new Date(b.orderDate),
+      sortOrder: sortedInfo.columnKey === 'orderDate' && sortedInfo.order,
+      defaultSortOrder: 'descend',
       render: (date) => new Date(date).toLocaleString('vi-VN'),
     },
     {
@@ -463,11 +475,20 @@ function ProfileTabs({ activeTab, setActiveTab, form, user }) {
         {/* Orders Tab */}
         <TabPane tab="Đơn hàng" key="2">
           <Card title="Lịch sử đơn hàng">
+            <Button
+              style={{ color: 'black', borderColor: 'black', float: 'right', marginBottom: 10 }}
+              onClick={reloadTable}
+            >
+              <ReloadOutlined />
+            </Button>
             <Table
               columns={orderColumns}
               dataSource={totalOrder}
               rowKey="orderID"
               pagination={{ pageSize: 10 }}
+              onChange={(pagination, filters, sorter) => {
+                setSortedInfo(sorter || {});
+              }}
               expandable={{
                 expandedRowRender: (record) => {
                   const detail = orderDetailData?.[record.orderID];

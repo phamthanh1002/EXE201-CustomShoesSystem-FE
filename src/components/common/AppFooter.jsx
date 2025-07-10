@@ -56,7 +56,7 @@ export default function AppFooter() {
               href="https://www.facebook.com/profile.php?id=61576855024877"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: 'inherit', textDecoration: 'none' }} 
+              style={{ color: 'inherit', textDecoration: 'none' }}
             >
               <FacebookOutlined style={{ marginRight: 10 }} />
             </a>
