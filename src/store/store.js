@@ -8,6 +8,8 @@ import cartReducer from './slices/cartSlice';
 import orderReducer from './slices/orderSlice';
 import customerAddressReduce from './slices/customerAddressSlice';
 import bookmarkReducer from './slices/bookmarkSlice';
+import pickupReducer from './slices/pickupSlice';
+import deliveryReducer from './slices/deliverySlice';
 
 const store = configureStore({
   reducer: {
@@ -20,6 +22,8 @@ const store = configureStore({
     cart: cartReducer,
     order: orderReducer,
     bookmark: bookmarkReducer,
+    pickup: pickupReducer,
+    delivery: deliveryReducer,
   },
 });
 

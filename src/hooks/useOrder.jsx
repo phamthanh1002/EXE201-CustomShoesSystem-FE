@@ -3,20 +3,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   createOrder,
   getAllMyOrder,
+  getAllOrder,
   getOrderDetail,
+  pendingShipOrder,
   resetOrderState,
+  startProcessingOrder,
 } from '../store/slices/orderSlice';
 
 const useOrder = () => {
   const dispatch = useDispatch();
 
   const {
+    allOrders,
     orders,
     orderDetailData,
     orderData,
     paymentUrl,
     message,
     success,
+
+    allOrderLoading,
+    allOrderError,
 
     createOrderLoading,
     createOrderError,
@@ -26,6 +33,12 @@ const useOrder = () => {
 
     orderDetailLoading,
     orderDetailError,
+
+    startProcessingLoading,
+    startProcessingError,
+
+    pendingShipLoading,
+    pendingShipError,
   } = useSelector((state) => state.order);
 
   const submitOrder = (formData) => {
@@ -44,12 +57,27 @@ const useOrder = () => {
     return dispatch(getOrderDetail(orderID));
   };
 
+  const fetchAllOrders = () => {
+    return dispatch(getAllOrder());
+  };
+
+  const updateStartProcessingStatus = (orderID) => {
+    return dispatch(startProcessingOrder(orderID));
+  };
+
+  const updatePendingShipStatus = (orderID) => {
+    return dispatch(pendingShipOrder(orderID));
+  };
+
   return {
     // Actions
     submitOrder,
     fetchMyOrders,
     resetOrder,
     fetchOrderDetail,
+    fetchAllOrders,
+    updateStartProcessingStatus,
+    updatePendingShipStatus,
 
     // Create Order State
     createOrderLoading,
@@ -58,6 +86,11 @@ const useOrder = () => {
     orderData,
     paymentUrl,
     message,
+
+    //All Orders State
+    allOrders,
+    allOrderLoading,
+    allOrderError,
 
     // My Orders State
     orders,
@@ -68,6 +101,14 @@ const useOrder = () => {
     orderDetailData,
     orderDetailLoading,
     orderDetailError,
+
+    // Start Processing
+    startProcessingLoading,
+    startProcessingError,
+
+    // Pending Ship
+    pendingShipLoading,
+    pendingShipError,
   };
 };
 

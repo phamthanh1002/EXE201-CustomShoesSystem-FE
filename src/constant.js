@@ -21,14 +21,29 @@ export const API_SEARCH_PRODUCT = '/Product/search?';
 
 //APIs Feedback Product
 export const API_GET_ALL_FEEDBACK = '/Feedback/all';
-export const API_CREATE_FEEDBACK_CUSTOM = '/Feedback/custom'
-export const API_CREATE_FEEDBACK_ACCESSORY = '/Feedback/accessory'
-export const API_CREATE_FEEDBACK_CLEANING= '/Feedback/cleaning'
+export const API_CREATE_FEEDBACK_CUSTOM = '/Feedback/custom';
+export const API_CREATE_FEEDBACK_ACCESSORY = '/Feedback/accessory';
+export const API_CREATE_FEEDBACK_CLEANING = '/Feedback/cleaning';
 
 //APIs Service
 export const API_GET_ALL_SERVICE = '/ServicePackage';
 
 //APIs Orders
+export const API_GET_ALL_ORDER = '/Order';
 export const API_CREATE_ORDER = '/Order/create-order';
 export const API_GET_ALL_MY_ORDER = '/Order/user/:id';
 export const API_GET_ORDER_DETAIL = '/OrderDetail/order/:orderID';
+export const API_ORDER_START_PROCESSING = '/Order/:id/start-processing';
+export const API_ORDER_PENDING_SHIP = '/Order/:id/pending-ship';
+
+//APIs Pickups
+export const API_GET_ALL_PICKUP = '/PickupRequest';
+export const API_UPDATE_SHIPPER = '/PickupRequest/:id';
+export const API_UPDATE_PICKING_UP = '/PickupRequest/update-to-picking/:id';
+export const API_UPDATE_PICKING_UP_DONE = '/PickupRequest/update-to-picked/:id';
+
+// APIs Delivery
+export const API_GET_DELIVERY_BY_ORDERID = '/Delivery/byorder/:id';
+export const API_CREATE_DELIVERY = '/Delivery';
+export const API_START_DELIVERY = '/Delivery/:id/start';
+export const API_COMPLETE_DELIVERY = '/Delivery/:id/complete';
