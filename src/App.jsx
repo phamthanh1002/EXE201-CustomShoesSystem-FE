@@ -52,7 +52,7 @@ function App() {
     <>
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick={false}
@@ -74,7 +74,7 @@ function App() {
           <Route path="/oauth-success" element={LazyWrapper(OAuthSuccess)} />
 
           {/* Customer */}
-          <Route path="/" element={LazyWrapper(CustomerLayout)}>
+          <Route path="/home" element={LazyWrapper(CustomerLayout)}>
             <Route index element={LazyWrapper(HomePage)} />
             <Route path="custom" element={LazyWrapper(ShoeCustomPage)} />
             <Route path="cleaning" element={LazyWrapper(ShoeCleaningPage)} />

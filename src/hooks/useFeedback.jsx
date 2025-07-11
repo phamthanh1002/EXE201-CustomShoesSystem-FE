@@ -6,6 +6,7 @@ import {
   feedbackAccessory,
   feedbackCleaning,
   resetFeedbackErrors,
+  deleteFeedback as deleteFeedbackThunk,
 } from '../store/slices/feedbackSlice';
 
 export default function useFeedback() {
@@ -24,6 +25,9 @@ export default function useFeedback() {
 
     cleaningFeedbackLoading,
     cleaningFeedbackError,
+
+    deleteFeedbackLoading,
+    deleteFeedbackError,
   } = useSelector((state) => state.feedbacks);
 
   // Fetch all feedbacks when component mounts
@@ -40,6 +44,7 @@ export default function useFeedback() {
   const submitCustomFeedback = (formData) => dispatch(feedbackCustom(formData));
   const submitAccessoryFeedback = (formData) => dispatch(feedbackAccessory(formData));
   const submitCleaningFeedback = (formData) => dispatch(feedbackCleaning(formData));
+  const deleteFeedback = (feedbackID) => dispatch(deleteFeedbackThunk(feedbackID)).unwrap();
 
   return {
     // Data
@@ -50,16 +55,19 @@ export default function useFeedback() {
     customFeedbackLoading,
     accessoryFeedbackLoading,
     cleaningFeedbackLoading,
+    deleteFeedbackLoading,
 
     // Error state
     error,
     customFeedbackError,
     accessoryFeedbackError,
     cleaningFeedbackError,
+    deleteFeedbackError,
 
     // Submit functions
     submitCustomFeedback,
     submitAccessoryFeedback,
     submitCleaningFeedback,
+    deleteFeedback,
   };
 }

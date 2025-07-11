@@ -50,7 +50,7 @@ const useOrder = () => {
   };
 
   const resetOrder = () => {
-    dispatch(resetOrderState());
+    return dispatch(resetOrderState());
   };
 
   const fetchOrderDetail = (orderID) => {
