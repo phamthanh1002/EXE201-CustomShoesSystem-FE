@@ -1,20 +1,20 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllAccessoryProduct,
-  getAllCustomProduct,
-} from '../store/slices/productSlice';
+import { getAllAccessoryProduct, getAllCustomProduct } from '../store/slices/productSlice';
 
 const useProducts = () => {
   const dispatch = useDispatch();
 
   const {
+    products,
     customProducts,
     accessoryProducts,
 
+    loading,
     loadingAllCustom,
     loadingAllAccessory,
 
+    error,
     errorAllCustom,
     errorAllAccessory,
   } = useSelector((state) => state.products);

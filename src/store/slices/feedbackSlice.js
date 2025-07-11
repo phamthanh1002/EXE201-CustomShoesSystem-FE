@@ -4,6 +4,7 @@ import {
   API_CREATE_FEEDBACK_ACCESSORY,
   API_CREATE_FEEDBACK_CLEANING,
   API_CREATE_FEEDBACK_CUSTOM,
+  API_DELETE_FEEDBACK,
   API_GET_ALL_FEEDBACK,
 } from '../../constant';
 
@@ -63,6 +64,20 @@ export const feedbackCleaning = createAsyncThunk(
   },
 );
 
+export const deleteFeedback = createAsyncThunk(
+  'feedback/delete',
+  async (feedbackID, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.delete(API_DELETE_FEEDBACK.replace(':id', feedbackID));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || 'Xóa feedback thất bại !',
+      );
+    }
+  },
+);
+
 const feedbackSlice = createSlice({
   name: 'feedbacks',
   initialState: {
@@ -82,6 +97,10 @@ const feedbackSlice = createSlice({
     // create cleaning
     cleaningFeedbackLoading: false,
     cleaningFeedbackError: null,
+
+    // delete feedback
+    deleteFeedbackLoading: false,
+    deleteFeedbackError: null,
   },
   reducers: {
     resetFeedbackErrors: (state) => {
@@ -144,6 +163,19 @@ const feedbackSlice = createSlice({
       .addCase(feedbackCleaning.rejected, (state, action) => {
         state.cleaningFeedbackLoading = false;
         state.cleaningFeedbackError = action.payload;
+      })
+
+      // delete feedback
+      .addCase(deleteFeedback.pending, (state) => {
+        state.deleteFeedbackLoading = true;
+        state.deleteFeedbackError = null;
+      })
+      .addCase(deleteFeedback.fulfilled, (state) => {
+        state.deleteFeedbackLoading = false;
+      })
+      .addCase(deleteFeedback.rejected, (state, action) => {
+        state.deleteFeedbackLoading = false;
+        state.deleteFeedbackError = action.payload;
       });
   },
 });

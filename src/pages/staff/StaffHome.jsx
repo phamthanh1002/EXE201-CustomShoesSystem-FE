@@ -10,8 +10,8 @@ import {
 import { Button, Layout, Menu, theme, Typography } from 'antd';
 import dayjs from 'dayjs';
 import OrderManager from './OrderManagement/OrderManager';
-import ProductManager from './ProductManager';
-import FeedbackManager from './FeedbackManager';
+import ProductManager from './ProductManagement/ProductManager';
+import FeedbackManager from './FeedbackManagement/FeedbackManager';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;

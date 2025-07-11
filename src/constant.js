@@ -13,8 +13,13 @@ export const API_UPDATE_ADDRESS = '/CustomerAddresses/:id';
 //APIs Product
 export const API_GET_TOP_8_CUSTOM_PRODUCT = '/Product/custom/hot-products?topN=8';
 export const API_GET_TOP_8_ACCESSORY = '/Product/accessory/hot-products?topN=8';
-export const API_GET_ALL_PRODUCT = '/Product/custom';
+export const API_GET_ALL_CUSTOM = '/Product/custom';
 export const API_GET_ALL_ACCESSORY = '/Product/accessory';
+export const API_GET_ALL_PRODUCT = '/Product';
+export const API_CREATE_CUSTOM_PRODUCT = '/Product/custom';
+export const API_CREATE_ACCESSORY_PRODUCT = '/Product/accessory';
+export const API_DELETE_PRODUCT = '/Product/:id/hard';
+export const API_UPDATE_PRODUCT = '/Product/:id';
 
 //APIs Filter Product
 export const API_SEARCH_PRODUCT = '/Product/search?';
@@ -24,6 +29,7 @@ export const API_GET_ALL_FEEDBACK = '/Feedback/all';
 export const API_CREATE_FEEDBACK_CUSTOM = '/Feedback/custom';
 export const API_CREATE_FEEDBACK_ACCESSORY = '/Feedback/accessory';
 export const API_CREATE_FEEDBACK_CLEANING = '/Feedback/cleaning';
+export const API_DELETE_FEEDBACK = '/Feedback/:id/hard';
 
 //APIs Service
 export const API_GET_ALL_SERVICE = '/ServicePackage';

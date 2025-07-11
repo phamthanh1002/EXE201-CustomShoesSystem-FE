@@ -13,7 +13,7 @@ export default function usePickup({ autoFetch = false } = {}) {
   const { pickup, loading, error } = useSelector((state) => state.pickup);
 
   const fetchPickup = useCallback(() => {
-    dispatch(getAllPickup());
+    return dispatch(getAllPickup());
   }, [dispatch]);
 
   const handleCreateShipper = useCallback(
