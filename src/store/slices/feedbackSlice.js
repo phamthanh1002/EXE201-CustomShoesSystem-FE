@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
 import {
+  API_CHANGE_ACTIVE_FEEDBACK,
   API_CREATE_FEEDBACK_ACCESSORY,
   API_CREATE_FEEDBACK_CLEANING,
   API_CREATE_FEEDBACK_CUSTOM,
@@ -78,6 +79,22 @@ export const deleteFeedback = createAsyncThunk(
   },
 );
 
+export const changeActiveFeedback = createAsyncThunk(
+  'feedback/is-active',
+  async (feedbackID, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.put(API_CHANGE_ACTIVE_FEEDBACK.replace(':id', feedbackID));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message ||
+          error?.message ||
+          'Thay đổi trạng thái feedback thất bại !',
+      );
+    }
+  },
+);
+
 const feedbackSlice = createSlice({
   name: 'feedbacks',
   initialState: {
@@ -101,6 +118,10 @@ const feedbackSlice = createSlice({
     // delete feedback
     deleteFeedbackLoading: false,
     deleteFeedbackError: null,
+
+    // active feedback
+    loadingActiveFeedback: false,
+    errorActiveFeedback: null,
   },
   reducers: {
     resetFeedbackErrors: (state) => {
@@ -176,6 +197,19 @@ const feedbackSlice = createSlice({
       .addCase(deleteFeedback.rejected, (state, action) => {
         state.deleteFeedbackLoading = false;
         state.deleteFeedbackError = action.payload;
+      })
+
+      // Active Feedback
+      .addCase(changeActiveFeedback.pending, (state) => {
+        state.loadingActiveFeedback = true;
+        state.errorActiveFeedback = null;
+      })
+      .addCase(changeActiveFeedback.fulfilled, (state) => {
+        state.loadingActiveFeedback = false;
+      })
+      .addCase(changeActiveFeedback.rejected, (state, action) => {
+        state.loadingActiveFeedback = false;
+        state.errorActiveFeedback = action.payload;
       });
   },
 });

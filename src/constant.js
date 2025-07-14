@@ -20,6 +20,7 @@ export const API_CREATE_CUSTOM_PRODUCT = '/Product/custom';
 export const API_CREATE_ACCESSORY_PRODUCT = '/Product/accessory';
 export const API_DELETE_PRODUCT = '/Product/:id/hard';
 export const API_UPDATE_PRODUCT = '/Product/:id';
+export const API_CHANGE_ACTIVE_PRODUCT = '/Product/:id/toggle-isactive';
 
 //APIs Filter Product
 export const API_SEARCH_PRODUCT = '/Product/search?';
@@ -30,6 +31,7 @@ export const API_CREATE_FEEDBACK_CUSTOM = '/Feedback/custom';
 export const API_CREATE_FEEDBACK_ACCESSORY = '/Feedback/accessory';
 export const API_CREATE_FEEDBACK_CLEANING = '/Feedback/cleaning';
 export const API_DELETE_FEEDBACK = '/Feedback/:id/hard';
+export const API_CHANGE_ACTIVE_FEEDBACK = '/Feedback/:id/toggle-isactive';
 
 //APIs Service
 export const API_GET_ALL_SERVICE = '/ServicePackage';
@@ -53,3 +55,8 @@ export const API_GET_DELIVERY_BY_ORDERID = '/Delivery/byorder/:id';
 export const API_CREATE_DELIVERY = '/Delivery';
 export const API_START_DELIVERY = '/Delivery/:id/start';
 export const API_COMPLETE_DELIVERY = '/Delivery/:id/complete';
+
+// APIs Admin
+export const API_GET_ALL_USER = '/admin/users';
+export const API_GET_REVENUE = '/Revenue/monthly';
+export const API_GET_MONTHLY_REVENUE = '/Revenue/monthly';

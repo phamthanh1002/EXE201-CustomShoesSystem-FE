@@ -10,6 +10,8 @@ import customerAddressReduce from './slices/customerAddressSlice';
 import bookmarkReducer from './slices/bookmarkSlice';
 import pickupReducer from './slices/pickupSlice';
 import deliveryReducer from './slices/deliverySlice';
+import userReducer from './slices/userSlice';
+import revenueReducer from './slices/revenueSlice';
 
 const store = configureStore({
   reducer: {
@@ -24,6 +26,8 @@ const store = configureStore({
     bookmark: bookmarkReducer,
     pickup: pickupReducer,
     delivery: deliveryReducer,
+    user: userReducer,
+    revenue: revenueReducer,
   },
 });
 

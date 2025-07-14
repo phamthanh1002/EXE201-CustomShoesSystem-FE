@@ -33,7 +33,9 @@ const OrderCreateSuccess = lazy(() => import('./pages/customer/Order/OrderCreate
 // Staff
 const StaffLayout = lazy(() => import('./layouts/StaffLayout'));
 const StaffHome = lazy(() => import('./pages/staff/StaffHome'));
+
 //Admin
+const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
 
 function App() {
@@ -74,7 +76,7 @@ function App() {
           <Route path="/oauth-success" element={LazyWrapper(OAuthSuccess)} />
 
           {/* Customer */}
-          <Route path="/home" element={LazyWrapper(CustomerLayout)}>
+          <Route path="/" element={LazyWrapper(CustomerLayout)}>
             <Route index element={LazyWrapper(HomePage)} />
             <Route path="custom" element={LazyWrapper(ShoeCustomPage)} />
             <Route path="cleaning" element={LazyWrapper(ShoeCleaningPage)} />
@@ -99,7 +101,9 @@ function App() {
 
           {/* Admin */}
           <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
-            <Route path="/admin" element={LazyWrapper(AdminHome)} />
+            <Route path="/admin" element={LazyWrapper(AdminLayout)}>
+              <Route index element={LazyWrapper(AdminHome)} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

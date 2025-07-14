@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from 'react';
 import { Card, Button, Typography, Row, Col, Space, List, Badge, Spin } from 'antd';
 import { CheckOutlined, StarFilled, CrownOutlined, ToolOutlined } from '@ant-design/icons';
@@ -16,6 +17,8 @@ const ShoeCleaningPage = () => {
   const dispatch = useDispatch();
   const { services, loading, error } = useSelector((state) => state.services);
   const { addToCart } = useCart();
+
+  console.log(services)
 
   const [hoveredCardId, setHoveredCardId] = useState(null);
 

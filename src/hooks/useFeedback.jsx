@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  getAllFeedback,
+  getAllFeedback as getAllFeedbackThunk,
   feedbackCustom,
   feedbackAccessory,
   feedbackCleaning,
   resetFeedbackErrors,
   deleteFeedback as deleteFeedbackThunk,
+  changeActiveFeedback as changeActiveFeedbackThunk,
 } from '../store/slices/feedbackSlice';
 
 export default function useFeedback() {
@@ -32,7 +33,7 @@ export default function useFeedback() {
 
   // Fetch all feedbacks when component mounts
   useEffect(() => {
-    dispatch(getAllFeedback());
+    dispatch(getAllFeedbackThunk());
 
     // Reset errors when unmount
     return () => {
@@ -41,10 +42,14 @@ export default function useFeedback() {
   }, [dispatch]);
 
   // Submit functions
+  const getAllFeedbacks = () => dispatch(getAllFeedbackThunk());
   const submitCustomFeedback = (formData) => dispatch(feedbackCustom(formData));
   const submitAccessoryFeedback = (formData) => dispatch(feedbackAccessory(formData));
   const submitCleaningFeedback = (formData) => dispatch(feedbackCleaning(formData));
   const deleteFeedback = (feedbackID) => dispatch(deleteFeedbackThunk(feedbackID)).unwrap();
+  const changeActiveFeedback = (feedbackID) => {
+    return dispatch(changeActiveFeedbackThunk(feedbackID)).unwrap();
+  };
 
   return {
     // Data
@@ -69,5 +74,7 @@ export default function useFeedback() {
     submitAccessoryFeedback,
     submitCleaningFeedback,
     deleteFeedback,
+    changeActiveFeedback,
+    getAllFeedbacks,
   };
 }

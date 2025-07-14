@@ -1,7 +1,13 @@
 const mergeServiceData = (templatePlans, serviceData) => {
+  const idToPackageName = {
+    basic: 'Cơ Bản',
+    professional: 'Chuyên Nghiệp',
+    premium: 'Cao Cấp',
+  };
+
   return templatePlans.map((template) => {
     const matchedService = serviceData.find(
-      (service) => service.packageName === template.packageName,
+      (service) => service.packageName === idToPackageName[template.id],
     );
 
     return matchedService

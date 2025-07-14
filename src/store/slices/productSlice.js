@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
 import {
+  API_CHANGE_ACTIVE_PRODUCT,
   API_CREATE_ACCESSORY_PRODUCT,
   API_CREATE_CUSTOM_PRODUCT,
   API_DELETE_PRODUCT,
@@ -155,6 +156,22 @@ export const updateProduct = createAsyncThunk(
   },
 );
 
+export const changeActiveProduct = createAsyncThunk(
+  'product/is-active',
+  async (productID, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.put(API_CHANGE_ACTIVE_PRODUCT.replace(':id', productID));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message ||
+          error?.message ||
+          'Thay đổi trạng thái sản phẩm thất bại !',
+      );
+    }
+  },
+);
+
 // Slice
 const productSlice = createSlice({
   name: 'products',
@@ -174,6 +191,7 @@ const productSlice = createSlice({
     loadingCreateAccessory: false,
     loadingDeleteProduct: false,
     loadingEditProduct: false,
+    loadingActiveProduct: false,
 
     error: null,
     errorTopCustom: null,
@@ -184,6 +202,7 @@ const productSlice = createSlice({
     errorCreateAccessory: null,
     errorDeleteProduct: null,
     errorEditProduct: null,
+    errorActiveProduct: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -308,6 +327,19 @@ const productSlice = createSlice({
       .addCase(updateProduct.rejected, (state, action) => {
         state.loadingEditProduct = false;
         state.errorEditProduct = action.payload;
+      })
+
+      // Is Active Product
+      .addCase(changeActiveProduct.pending, (state) => {
+        state.loadingActiveProduct = true;
+        state.errorActiveProduct = null;
+      })
+      .addCase(changeActiveProduct.fulfilled, (state, action) => {
+        state.loadingActiveProduct = false;
+      })
+      .addCase(changeActiveProduct.rejected, (state, action) => {
+        state.loadingActiveProduct = false;
+        state.errorActiveProduct = action.payload;
       });
   },
 });

@@ -4,6 +4,7 @@ import {
   createCustomProduct as createCustomThunk,
   deleteProduct as deleteProductThunk,
   updateProduct as updateProductThunk,
+  changeActiveProduct as changeActiveProductThunk,
   getAllProduct,
 } from '../store/slices/productSlice';
 
@@ -31,12 +32,17 @@ const useAllProduct = () => {
     return dispatch(updateProductThunk({ productID, formData })).unwrap();
   };
 
+  const changeActiveProduct = (productID) => {
+    return dispatch(changeActiveProductThunk(productID)).unwrap();
+  };
+
   return {
     fetchAllProduct,
     createCustomProduct,
     createAccessoryProduct,
     deleteProduct,
     updateProduct,
+    changeActiveProduct,
     products,
     loading,
     error,

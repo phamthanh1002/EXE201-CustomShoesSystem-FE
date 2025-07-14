@@ -12,6 +12,7 @@ import {
   Image,
   Descriptions,
   Popconfirm,
+  Switch,
 } from 'antd';
 import Title from 'antd/es/typography/Title';
 import {
@@ -27,6 +28,7 @@ import useAllProduct from '../../../hooks/useAllProduct';
 import CreateProductModal from './CreateProductModal';
 import { toast } from 'react-toastify';
 import EditProductModal from './EditProductModal';
+import useAuth from '../../../hooks/useAuth';
 
 const { Text } = Typography;
 
@@ -36,7 +38,14 @@ export default function ProductManager() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const { fetchAllProduct, deleteProduct, products } = useAllProduct();
+  const { fetchAllProduct, deleteProduct, changeActiveProduct, products } = useAllProduct();
+  const { user } = useAuth();
+
+  const role = user?.roleName;
+
+  const sortedNewestProduct = [...products].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+  );
 
   useEffect(() => {
     fetchAllProduct();
@@ -46,6 +55,16 @@ export default function ProductManager() {
     setFilteredInfo({});
     setSortedInfo({});
     fetchAllProduct();
+  };
+
+  const handleToggleActive = async (productID) => {
+    try {
+      await changeActiveProduct(productID);
+      await fetchAllProduct();
+      toast.success('Thay đổi trạng thái sản phẩm thành công');
+    } catch (error) {
+      toast.error(error || 'Lỗi khi cập nhật trạng thái sản phẩm');
+    }
   };
 
   const handleDeleteProduct = async (productID) => {
@@ -116,6 +135,7 @@ export default function ProductManager() {
             <Button type="primary" onClick={() => confirm()} size="small" style={{ width: 90 }}>
               Tìm kiếm
             </Button>
+
             <Button
               onClick={() => {
                 clearFilters();
@@ -206,9 +226,9 @@ export default function ProductManager() {
       key: 'price',
       align: 'center',
       render: (price) => (
-        <span style={{ color: '#fa541c', fontWeight: 600 }}>
+        <Text type="danger" style={{ fontWeight: 'bold' }}>
           {price.toLocaleString('vi-VN')} VND
-        </span>
+        </Text>
       ),
       sorter: (a, b) => a.price - b.price,
       sortOrder: sortedInfo.columnKey === 'price' && sortedInfo.order,
@@ -227,22 +247,31 @@ export default function ProductManager() {
       key: 'total',
       align: 'center',
       render: (total) => (
-        <span style={{ color: '#52c41a', fontWeight: 600 }}>
+        <Text type="warning" style={{ fontWeight: 'bold' }}>
           {total.toLocaleString('vi-VN')} VND
-        </span>
+        </Text>
       ),
       sorter: (a, b) => a.total - b.total,
       sortOrder: sortedInfo.columnKey === 'total' && sortedInfo.order,
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'isActive',
+      key: 'isActive',
       align: 'center',
-      filteredValue: filteredInfo.status || null,
-      onFilter: (value, record) => record.status === value,
-      render: (status) =>
-        status ? <Tag color="green">Còn hàng</Tag> : <Tag color="red">Hết hàng</Tag>,
+      filteredValue: filteredInfo.isActive || null,
+      onFilter: (value, record) => record.isActive === value,
+      render: (isActive, record) => (
+        <Switch
+          checked={isActive}
+          checkedChildren="Hiện"
+          unCheckedChildren="Ẩn"
+          onChange={(checked) => handleToggleActive(record.productID, checked)}
+          style={{
+            backgroundColor: isActive ? '#389e0d' : '#cf1322',
+          }}
+        />
+      ),
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8, width: 200 }}>
           <div style={{ marginBottom: 8 }}>
@@ -255,7 +284,7 @@ export default function ProductManager() {
                 setSelectedKeys(nextKeys);
               }}
             >
-              Còn hàng
+              Đang bán
             </Checkbox>
           </div>
           <div style={{ marginBottom: 8 }}>
@@ -268,7 +297,7 @@ export default function ProductManager() {
                 setSelectedKeys(nextKeys);
               }}
             >
-              Hết hàng
+              Ẩn sản phẩm
             </Checkbox>
           </div>
           <Space style={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -278,7 +307,7 @@ export default function ProductManager() {
               onClick={() => {
                 clearFilters();
                 confirm();
-                setFilteredInfo((prev) => ({ ...prev, status: null }));
+                setFilteredInfo((prev) => ({ ...prev, isActive: null }));
               }}
             >
               Reset
@@ -289,7 +318,7 @@ export default function ProductManager() {
               style={{ width: 80 }}
               onClick={() => {
                 confirm();
-                setFilteredInfo((prev) => ({ ...prev, status: [...selectedKeys] }));
+                setFilteredInfo((prev) => ({ ...prev, isActive: [...selectedKeys] }));
               }}
             >
               OK
@@ -308,18 +337,20 @@ export default function ProductManager() {
             Sửa
           </Button>
 
-          <Popconfirm
-            title="Bạn có chắc muốn xóa sản phẩm này?"
-            description="Hành động này không thể hoàn tác"
-            onConfirm={() => handleDeleteProduct(record.productID)}
-            okText="Xóa"
-            cancelText="Hủy"
-            okButtonProps={{ danger: true }}
-          >
-            <Button size="small" type="link" danger>
-              Xóa
-            </Button>
-          </Popconfirm>
+          {role === 'Admin' && (
+            <Popconfirm
+              title="Bạn có chắc muốn xóa sản phẩm này?"
+              description="Hành động này không thể hoàn tác"
+              onConfirm={() => handleDeleteProduct(record.productID)}
+              okText="Xóa"
+              cancelText="Hủy"
+              okButtonProps={{ danger: true }}
+            >
+              <Button size="small" type="link" danger>
+                Xóa
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
@@ -347,7 +378,7 @@ export default function ProductManager() {
       </div>
       <Table
         columns={productColumns}
-        dataSource={products}
+        dataSource={sortedNewestProduct}
         rowKey="productID"
         onChange={(pagination, filters, sorter) => {
           setFilteredInfo(filters);
