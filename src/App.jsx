@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ToastContainer, Slide } from 'react-toastify';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { ToastContainer, Slide, toast } from 'react-toastify';
 import { useEffect, useState, lazy } from 'react';
+import { useSelector } from 'react-redux';
 
 import ScrollToTopButton from './components/common/ScrollToTopButton';
 import LoadingScreen from './components/common/LoadingScreen';
@@ -15,6 +16,7 @@ const CustomerLayout = lazy(() => import('./layouts/CustomerLayout'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
 const OAuthSuccess = lazy(() => import('./pages/auth/OAuthSuccess'));
+const ForgotPassPage = lazy(() => import('./pages/auth/ForgotPassPage'));
 
 // Customer Pages
 const HomePage = lazy(() => import('./pages/customer/Home/HomePage'));
@@ -40,6 +42,8 @@ const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
 
 function App() {
   const [loading, setLoading] = useState(() => !sessionStorage.getItem('hasLoaded'));
+  const { user } = useSelector((state) => state.auth);
+  const location = useLocation();
 
   useEffect(() => {
     if (loading) {
@@ -47,6 +51,14 @@ function App() {
       setLoading(false);
     }
   }, [loading]);
+
+  useEffect(() => {
+    const isGoogleLogin = sessionStorage.getItem('googleLoginSuccess');
+    if (user && isGoogleLogin) {
+      toast.success('Đăng nhập thành công!');
+      sessionStorage.removeItem('googleLoginSuccess');
+    }
+  }, [user, location]);
 
   if (loading) return <LoadingScreen onFinish={() => setLoading(false)} />;
 
@@ -67,46 +79,45 @@ function App() {
       />
       <ScrollToTopButton />
 
-      <BrowserRouter>
-        <Routes>
-          {/* Auth */}
-          <Route path="/login" element={LazyWrapper(LoginPage)} />
-          <Route path="/register" element={LazyWrapper(RegisterPage)} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="/oauth-success" element={LazyWrapper(OAuthSuccess)} />
+      <Routes>
+        {/* Auth */}
+        <Route path="/login" element={LazyWrapper(LoginPage)} />
+        <Route path="/register" element={LazyWrapper(RegisterPage)} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/oauth-success" element={LazyWrapper(OAuthSuccess)} />
+        <Route path="/forgot-password" element={LazyWrapper(ForgotPassPage)} />
 
-          {/* Customer */}
-          <Route path="/" element={LazyWrapper(CustomerLayout)}>
-            <Route index element={LazyWrapper(HomePage)} />
-            <Route path="custom" element={LazyWrapper(ShoeCustomPage)} />
-            <Route path="cleaning" element={LazyWrapper(ShoeCleaningPage)} />
-            <Route path="accessories" element={LazyWrapper(ShoeAccessoriesPage)} />
-            <Route path="search" element={LazyWrapper(SearchResultPage)} />
-            <Route path="cart" element={LazyWrapper(CartPage)} />
+        {/* Customer */}
+        <Route path="/" element={LazyWrapper(CustomerLayout)}>
+          <Route index element={LazyWrapper(HomePage)} />
+          <Route path="custom" element={LazyWrapper(ShoeCustomPage)} />
+          <Route path="cleaning" element={LazyWrapper(ShoeCleaningPage)} />
+          <Route path="accessories" element={LazyWrapper(ShoeAccessoriesPage)} />
+          <Route path="search" element={LazyWrapper(SearchResultPage)} />
+          <Route path="cart" element={LazyWrapper(CartPage)} />
 
-            <Route element={<ProtectedRoute allowedRoles={['Customer']} />}>
-              <Route path="profile" element={LazyWrapper(ProfilePage)} />
-              <Route path="payment-success" element={LazyWrapper(PaymentSuccess)} />
-              <Route path="payment-failure" element={LazyWrapper(PaymentFailure)} />
-              <Route path="order-create-success" element={LazyWrapper(OrderCreateSuccess)} />
-            </Route>
+          <Route element={<ProtectedRoute allowedRoles={['Customer']} />}>
+            <Route path="profile" element={LazyWrapper(ProfilePage)} />
+            <Route path="payment-success" element={LazyWrapper(PaymentSuccess)} />
+            <Route path="payment-failure" element={LazyWrapper(PaymentFailure)} />
+            <Route path="order-create-success" element={LazyWrapper(OrderCreateSuccess)} />
           </Route>
+        </Route>
 
-          {/* Staff */}
-          <Route element={<ProtectedRoute allowedRoles={['Staff']} />}>
-            <Route path="/staff" element={LazyWrapper(StaffLayout)}>
-              <Route index element={LazyWrapper(StaffHome)} />
-            </Route>
+        {/* Staff */}
+        <Route element={<ProtectedRoute allowedRoles={['Staff']} />}>
+          <Route path="/staff" element={LazyWrapper(StaffLayout)}>
+            <Route index element={LazyWrapper(StaffHome)} />
           </Route>
+        </Route>
 
-          {/* Admin */}
-          <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
-            <Route path="/admin" element={LazyWrapper(AdminLayout)}>
-              <Route index element={LazyWrapper(AdminHome)} />
-            </Route>
+        {/* Admin */}
+        <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
+          <Route path="/admin" element={LazyWrapper(AdminLayout)}>
+            <Route index element={LazyWrapper(AdminHome)} />
           </Route>
-        </Routes>
-      </BrowserRouter>
+        </Route>
+      </Routes>
     </>
   );
 }

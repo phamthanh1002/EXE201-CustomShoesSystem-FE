@@ -2,6 +2,8 @@
 export const API_LOGIN = '/auth/login';
 export const API_REGISTER = '/auth/register';
 export const API_EDIT_PROFILE = '/admin/users/email/profile';
+export const API_FORGOT_PASS = '/auth/forgot-password';
+export const API_RESET_PASS = '/auth/reset-password';
 
 //APIs Customer Address
 export const API_CREATE_ADDRESS = '/CustomerAddresses';

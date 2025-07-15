@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Input, Button, Divider } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
 import img1 from '../../assets/Login/img1.webp';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { loginUser } from '../../store/slices/authSlice';
 import { toast } from 'react-toastify';
@@ -53,7 +53,12 @@ export default function LoginPage() {
     if (loginUser.fulfilled.match(resultAction)) {
       const { user } = resultAction.payload;
 
-      toast.success('Đăng nhập thành công!');
+      // Chỉ toast nếu không phải login từ Google
+      if (!localStorage.getItem('isGoogleLogin')) {
+        toast.success('Đăng nhập thành công!');
+      } else {
+        localStorage.removeItem('isGoogleLogin'); // reset flag sau toast
+      }
 
       switch (user.roleName) {
         case 'Admin':
@@ -62,7 +67,6 @@ export default function LoginPage() {
         case 'Staff':
           navigate('/staff');
           break;
-        case 'Customer':
         default:
           navigate('/');
           break;
@@ -200,6 +204,19 @@ export default function LoginPage() {
                 ← Quay về trang chủ
               </Button>
 
+              <Link
+                to="/forgot-password"
+                style={{
+                  float: 'right',
+                  color: 'royalblue',
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  fontWeight: '500',
+                }}
+              >
+                Quên mật khẩu ?
+              </Link>
+
               <Divider plain>or</Divider>
 
               <div style={{ textAlign: 'center', marginBottom: 12 }}>
@@ -208,7 +225,6 @@ export default function LoginPage() {
                   style={{
                     color: 'red',
                     cursor: 'pointer',
-                    textDecoration: 'underline',
                   }}
                   onClick={() => navigate('/register')}
                 >

@@ -227,7 +227,6 @@ export default function RegisterPage() {
                   style={{
                     color: 'red',
                     cursor: 'pointer',
-                    textDecoration: 'underline',
                   }}
                   onClick={() => navigate('/login')}
                 >

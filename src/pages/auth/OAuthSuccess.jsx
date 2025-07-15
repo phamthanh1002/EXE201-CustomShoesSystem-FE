@@ -38,7 +38,7 @@ export default function OAuthSuccess() {
 
     dispatch(setGoogleLoginSuccess({ user, token, refreshToken }));
 
-    toast.success('Đăng nhập thành công!');
+    sessionStorage.setItem('googleLoginSuccess', 'true');
     navigate('/');
   }, [location, navigate, dispatch]);
 

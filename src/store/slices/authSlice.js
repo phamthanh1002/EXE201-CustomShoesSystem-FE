@@ -1,7 +1,13 @@
 // src/store/slices/authSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from '../../axiosClient';
-import { API_EDIT_PROFILE, API_LOGIN, API_REGISTER } from '../../constant';
+import {
+  API_EDIT_PROFILE,
+  API_FORGOT_PASS,
+  API_LOGIN,
+  API_REGISTER,
+  API_RESET_PASS,
+} from '../../constant';
 
 const storedUser = localStorage.getItem('user');
 const storedToken = localStorage.getItem('token');
@@ -43,6 +49,30 @@ export const editProfile = createAsyncThunk(
   },
 );
 
+export const forgotPassword = createAsyncThunk(
+  'pass/forgot',
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(API_FORGOT_PASS, email);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || 'Gửi otp thất bại!');
+    }
+  },
+);
+
+export const resetPassword = createAsyncThunk(
+  'pass/reset',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(API_RESET_PASS, formData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || 'Tạo lại mật khẩu thất bại!');
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -53,6 +83,12 @@ const authSlice = createSlice({
     loading: false,
     error: null,
     isInitialized: true,
+
+    loadingForgotPass: false,
+    loadingResetPass: false,
+
+    errorForgotPass: null,
+    errorResetPass: null,
   },
   reducers: {
     logout(state) {
@@ -135,6 +171,32 @@ const authSlice = createSlice({
       .addCase(editProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // forgot pass
+      .addCase(forgotPassword.pending, (state) => {
+        state.loadingForgotPass = true;
+        state.errorForgotPass = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.loadingForgotPass = false;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loadingForgotPass = false;
+        state.errorForgotPass = action.payload;
+      })
+
+      // forgot pass
+      .addCase(resetPassword.pending, (state) => {
+        state.loadingResetPass = true;
+        state.errorResetPass = null;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.loadingResetPass = false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loadingResetPass = false;
+        state.errorResetPass = action.payload;
       });
   },
 });

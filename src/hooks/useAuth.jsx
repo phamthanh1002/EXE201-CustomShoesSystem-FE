@@ -1,5 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { editProfile, loginUser, logout, registerUser } from '../store/slices/authSlice';
+import {
+  editProfile,
+  loginUser,
+  logout,
+  registerUser,
+  forgotPassword as forgotPasswordThunk,
+  resetPassword as resetPasswordThunk,
+} from '../store/slices/authSlice';
 import { getMyAddress } from '../store/slices/customerAddressSlice';
 import useBookmark from './useBookmark';
 
@@ -27,6 +34,10 @@ const useAuth = () => {
 
   const updateProfile = (email, formData) => dispatch(editProfile({ email, formData }));
 
+  const forgotPassword = (email) => dispatch(forgotPasswordThunk(email));
+
+  const resetPassword = (formData) => dispatch(resetPasswordThunk(formData));
+
   return {
     user,
     token,
@@ -38,6 +49,8 @@ const useAuth = () => {
     register,
     logout: logoutUser,
     updateProfile,
+    forgotPassword,
+    resetPassword,
   };
 };
 
