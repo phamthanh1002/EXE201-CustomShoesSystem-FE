@@ -13,6 +13,8 @@ import { useEffect, useState } from 'react';
 import { Card, Col, Row, Statistic, Spin, Select, Typography, Space, Divider } from 'antd';
 import useUser from '../../../hooks/useUser';
 import useRevenue from '../../../hooks/useRevenue';
+import { toast } from 'react-toastify';
+import { ReloadOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -57,6 +59,17 @@ export default function RevenueManager() {
   useEffect(() => {
     getMonthlyRevenue({ year: initialYear });
   }, [initialYear]);
+
+  const reloadTable = async () => {
+    const y = currentYear.toString();
+    setInitialYear(y);
+    try {
+      await getMonthlyRevenue({ year: currentYear });
+      toast.success('Tải lại dữ liệu thành công');
+    } catch (error) {
+      toast.error(error || 'Tải lại dữ liệu thất bại');
+    }
+  };
 
   const data = {
     labels,
@@ -183,6 +196,9 @@ export default function RevenueManager() {
           bordered
           hoverable
           style={{ borderRadius: 8 }}
+          extra={
+            <ReloadOutlined onClick={reloadTable} style={{ fontSize: 16, cursor: 'pointer' }} />
+          }
         >
           <Bar key={initialYear} data={data} options={options} />
         </Card>

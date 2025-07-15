@@ -28,6 +28,8 @@ const AppHeader = () => {
   const { cartItems } = useCart();
   const { bookmarks } = useBookmark();
 
+  const role = user?.roleName;
+
   // console.log(bookmarks);
 
   useEffect(() => {
@@ -56,6 +58,16 @@ const AppHeader = () => {
     { key: '/accessories', label: 'Phụ kiện' },
   ];
 
+  const handleNavigateProfile = (role) => {
+    if (role === 'Admin') {
+      navigate('/admin');
+    } else if (role === 'Staff') {
+      navigate('/staff');
+    } else {
+      navigate('/profile');
+    }
+  };
+
   const handleLogout = () => {
     logout();
     toast.success('Bạn đã đăng xuất thành công!');
@@ -64,7 +76,7 @@ const AppHeader = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item key="profile" onClick={() => navigate('/profile')}>
+      <Menu.Item key="profile" onClick={() => handleNavigateProfile(role)}>
         Hồ sơ
       </Menu.Item>
       <Menu.Item style={{ color: 'red' }} key="logout" onClick={handleLogout}>
@@ -127,17 +139,21 @@ const AppHeader = () => {
           onSearch={handleSearch}
         />
 
-        <Link to="/profile">
-          <Badge count={bookmarks.length} size="small">
-            <HeartOutlined style={{ fontSize: 20 }} />
-          </Badge>
-        </Link>
+        {role !== 'Admin' && role !== 'Staff' && (
+          <>
+            <Link to="/profile">
+              <Badge count={bookmarks.length} size="small">
+                <HeartOutlined style={{ fontSize: 20 }} />
+              </Badge>
+            </Link>
 
-        <Link to="/cart">
-          <Badge count={cartItems.length} size="small">
-            <ShoppingCartOutlined style={{ fontSize: 20 }} />
-          </Badge>
-        </Link>
+            <Link to="/cart">
+              <Badge count={cartItems.length} size="small">
+                <ShoppingCartOutlined style={{ fontSize: 20 }} />
+              </Badge>
+            </Link>
+          </>
+        )}
 
         {user ? (
           <Dropdown overlay={menu} placement="bottomRight">

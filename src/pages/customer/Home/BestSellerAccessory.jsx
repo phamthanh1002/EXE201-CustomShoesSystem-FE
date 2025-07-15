@@ -10,7 +10,9 @@ export default function BestSellerAccessory() {
   const { topAccessoryProducts, loadingTopAccessory, errorTopAccessory } =
     useTopAccessoryProducts();
 
-  const slides = chunkArray(topAccessoryProducts, 4);
+  const activeProduct = topAccessoryProducts.filter((product) => product.isActive === true);
+
+  const slides = chunkArray(activeProduct, 4);
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -31,7 +33,7 @@ export default function BestSellerAccessory() {
           <div style={{ color: 'red', textAlign: 'center', padding: '2rem' }}>
             {errorTopAccessory}
           </div>
-        ) : topAccessoryProducts.length === 0 ? (
+        ) : activeProduct.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '2rem' }}>Không có phụ kiện nào.</div>
         ) : (
           <Carousel

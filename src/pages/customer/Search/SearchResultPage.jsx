@@ -17,6 +17,10 @@ const SearchResultPage = () => {
     ProductName: keyword,
   });
 
+  const activeProducts = products
+    .filter((product) => product.isActive === true)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   useEffect(() => {
     setFilter('ProductName', keyword);
     setFilter('ProductType', '');
@@ -53,11 +57,11 @@ const SearchResultPage = () => {
           <div style={{ color: 'red', textAlign: 'center', padding: '2rem' }}>{error}</div>
         ) : (
           <Row gutter={[24, 32]} style={{ padding: '1.5rem 2rem' }}>
-            {products.length === 0 ? (
+            {activeProducts.length === 0 ? (
               <div style={{ textAlign: 'center', width: '100%' }}>Không tìm thấy sản phẩm</div>
             ) : (
               <InfiniteScrollList
-                items={products}
+                items={activeProducts}
                 pageSize={8}
                 loading={false}
                 error={null}

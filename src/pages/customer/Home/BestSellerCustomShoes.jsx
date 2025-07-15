@@ -8,6 +8,8 @@ const { Title } = Typography;
 export default function BestSellerCustomShoes() {
   const { topCustomProducts, loadingTopCustom, errorTopCustom } = useTopCustomProducts();
 
+  const activeProduct = topCustomProducts.filter((product) => product.isActive === true);
+
   return (
     <div style={{ padding: '1rem' }}>
       <Title level={3} style={{ textAlign: 'center', fontWeight: 600 }}>
@@ -25,9 +27,9 @@ export default function BestSellerCustomShoes() {
       <Spin spinning={loadingTopCustom} tip="Đang tải sản phẩm...">
         {errorTopCustom ? (
           <div style={{ color: 'red', textAlign: 'center', padding: '2rem' }}>{errorTopCustom}</div>
-        ) : topCustomProducts?.length > 0 ? (
+        ) : activeProduct?.length > 0 ? (
           <Row gutter={[24, 32]} style={{ padding: '1.5rem 2rem' }}>
-            {topCustomProducts.map((product) => (
+            {activeProduct.map((product) => (
               <Col
                 key={product.productID}
                 xs={24}

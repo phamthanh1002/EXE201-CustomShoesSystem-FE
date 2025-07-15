@@ -45,7 +45,7 @@ export default function CreateProductModal({ open, onClose, onCreate }) {
       onCreate?.();
     } catch (err) {
       if (err?.errorFields) return;
-      message.error(err?.message || 'Có lỗi xảy ra, vui lòng thử lại');
+      toast.error(err?.message || 'Có lỗi xảy ra, vui lòng thử lại');
     } finally {
       setSubmitting(false); // ✅ tắt loading sau khi xong
     }

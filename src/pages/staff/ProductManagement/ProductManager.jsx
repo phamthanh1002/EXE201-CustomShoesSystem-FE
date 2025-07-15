@@ -23,12 +23,14 @@ import {
   InboxOutlined,
   FileTextOutlined,
   SearchOutlined,
+  CalendarOutlined,
 } from '@ant-design/icons';
 import useAllProduct from '../../../hooks/useAllProduct';
 import CreateProductModal from './CreateProductModal';
 import { toast } from 'react-toastify';
 import EditProductModal from './EditProductModal';
 import useAuth from '../../../hooks/useAuth';
+import dayjs from 'dayjs';
 
 const { Text } = Typography;
 
@@ -78,7 +80,12 @@ export default function ProductManager() {
   };
 
   const reloadTable = async () => {
-    await fetchAllProduct();
+    try {
+      await fetchAllProduct();
+      toast.success('Tải lại dữ liệu thành công');
+    } catch (error) {
+      toast.error(error || 'Tải lại dữ liệu thất bại');
+    }
   };
 
   const openCreateModal = () => setIsCreateModalOpen(true);
@@ -411,21 +418,41 @@ export default function ProductManager() {
                 size="middle"
               >
                 <Descriptions.Item
-                  style={{ fontWeight: 'bold' }}
                   label={
                     <>
-                      <BgColorsOutlined /> Màu sắc
+                      <span>
+                        <CalendarOutlined style={{ marginRight: 4 }} />
+                        Ngày tạo
+                      </span>
+                    </>
+                  }
+                  span={2} // 👉 chiếm 1 hàng
+                  style={{ fontWeight: 'bold' }}
+                >
+                  {dayjs(record.createdAt).format('DD/MM/YYYY HH:mm')}
+                </Descriptions.Item>
+
+                <Descriptions.Item
+                  label={
+                    <>
+                      <span>
+                        <BgColorsOutlined style={{ marginRight: 4 }} />
+                        Màu sắc
+                      </span>
                     </>
                   }
                 >
                   {record.color}
                 </Descriptions.Item>
+
                 {record.productType === 'Custom' && (
                   <Descriptions.Item
-                    style={{ fontWeight: 'bold' }}
                     label={
                       <>
-                        <AppstoreOutlined /> Kích cỡ
+                        <span>
+                          <AppstoreOutlined style={{ marginRight: 4 }} />
+                          Kích cỡ
+                        </span>
                       </>
                     }
                   >
@@ -434,20 +461,25 @@ export default function ProductManager() {
                 )}
 
                 <Descriptions.Item
-                  style={{ fontWeight: 'bold' }}
                   label={
                     <>
-                      <ShoppingOutlined /> Đã bán
+                      <span>
+                        <ShoppingOutlined style={{ marginRight: 4 }} />
+                        Đã bán
+                      </span>
                     </>
                   }
                 >
                   {record.soldQuantity}
                 </Descriptions.Item>
+
                 <Descriptions.Item
-                  style={{ fontWeight: 'bold' }}
                   label={
                     <>
-                      <InboxOutlined /> Tồn kho
+                      <span>
+                        <InboxOutlined style={{ marginRight: 4 }} />
+                        Tồn kho
+                      </span>
                     </>
                   }
                 >
@@ -455,9 +487,13 @@ export default function ProductManager() {
                 </Descriptions.Item>
               </Descriptions>
               <div style={{ marginTop: 10 }}>
-                <FileTextOutlined /> Mô tả:{' '}
+                <span>
+                  <FileTextOutlined style={{ color: '#7E7B83', marginRight: 4 }} />
+                </span>
+                <span style={{ color: '#7E7B83', marginRight: 4, fontWeight: '500' }}>Mô tả: </span>
+
                 {record.description ? (
-                  <Text style={{ color: 'black' }}>{record.description}</Text>
+                  <Text>{record.description}</Text>
                 ) : (
                   <i style={{ color: '#999' }}>Không có mô tả</i>
                 )}

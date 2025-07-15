@@ -11,9 +11,11 @@ const { Title } = Typography;
 export default function Feedback() {
   const { feedbacks, loading, error } = useFeedback();
 
+  const activeFeedback = feedbacks.filter((feedback) => feedback.isActive === true);
+
   // console.log(feedbacks);
 
-  const slides = chunkArray(feedbacks, 4);
+  const slides = chunkArray(activeFeedback, 4);
 
   return (
     <RevealOnScroll>

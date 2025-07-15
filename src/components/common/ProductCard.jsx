@@ -25,6 +25,8 @@ export default function ProductCard({ product }) {
   const [isProcessingBookmark, setIsProcessingBookmark] = useState(false);
   const { addToCart } = useCart();
 
+  const role = user?.roleName;
+
   if (!product) return null;
 
   const {
@@ -333,25 +335,27 @@ export default function ProductCard({ product }) {
             </Text>
           </Space>
 
-          <Button
-            icon={<ShoppingCartOutlined />}
-            type="primary"
-            block
-            size="large"
-            disabled={stockQuantity === 0 || !isActive || !status}
-            style={{
-              marginTop: 16,
-              background:
-                stockQuantity === 0 || !isActive || !status
-                  ? '#ccc'
-                  : 'linear-gradient(135deg, #000000 0%, #333333 100%)',
-              borderRadius: 8,
-              fontWeight: 600,
-            }}
-            onClick={handleAddToCart}
-          >
-            Thêm vào giỏ
-          </Button>
+          {role !== 'Admin' && role !== 'Staff' && (
+            <Button
+              icon={<ShoppingCartOutlined />}
+              type="primary"
+              block
+              size="large"
+              disabled={stockQuantity === 0 || !isActive || !status}
+              style={{
+                marginTop: 16,
+                background:
+                  stockQuantity === 0 || !isActive || !status
+                    ? '#ccc'
+                    : 'linear-gradient(135deg, #000000 0%, #333333 100%)',
+                borderRadius: 8,
+                fontWeight: 600,
+              }}
+              onClick={handleAddToCart}
+            >
+              Thêm vào giỏ
+            </Button>
+          )}
         </Card>
       </Tooltip>
     </RevealOnScroll>

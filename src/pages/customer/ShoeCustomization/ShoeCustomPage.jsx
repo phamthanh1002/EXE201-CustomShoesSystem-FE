@@ -12,6 +12,10 @@ export default function ShoeCustomPage() {
     ProductType: 'Custom',
   });
 
+  const activeProducts = products
+    .filter((product) => product.isActive === true)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -57,7 +61,7 @@ export default function ShoeCustomPage() {
         ) : (
           <Row gutter={[24, 32]} style={{ padding: '1.5rem 2rem' }}>
             <InfiniteScrollList
-              items={products}
+              items={activeProducts}
               pageSize={8}
               loading={false}
               error={null}

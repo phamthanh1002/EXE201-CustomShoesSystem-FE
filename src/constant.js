@@ -60,3 +60,5 @@ export const API_COMPLETE_DELIVERY = '/Delivery/:id/complete';
 export const API_GET_ALL_USER = '/admin/users';
 export const API_GET_REVENUE = '/Revenue/monthly';
 export const API_GET_MONTHLY_REVENUE = '/Revenue/monthly';
+export const API_CHANGE_ACCOUNT_STATUS = '/admin/users/:email/status';
+export const API_CREATE_NEW_STAFF = '/admin/Newstaff';

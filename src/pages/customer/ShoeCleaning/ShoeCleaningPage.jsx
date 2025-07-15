@@ -9,6 +9,7 @@ import mergeServiceData from '../../../utils/mergeServiceData';
 import useCart from '../../../hooks/useCart';
 import { toast } from 'react-toastify';
 import imageService from '../../../assets/cleaning-service.webp';
+import useAuth from '../../../hooks/useAuth';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -17,8 +18,11 @@ const ShoeCleaningPage = () => {
   const dispatch = useDispatch();
   const { services, loading, error } = useSelector((state) => state.services);
   const { addToCart } = useCart();
+  const { user } = useAuth();
 
-  console.log(services)
+  const role = user?.roleName;
+
+  console.log(services);
 
   const [hoveredCardId, setHoveredCardId] = useState(null);
 
@@ -230,55 +234,57 @@ const ShoeCleaningPage = () => {
                         )}
                       />
 
-                      <Button
-                        type={plan.buttonType}
-                        onClick={() => {
-                          addToCart({
-                            id: plan.id,
-                            packageID: plan.packageID,
-                            packageName: plan.title,
-                            price: Number(plan.price.replace(/\D/g, '')),
-                            originalPrice: Number(plan.originalPrice.replace(/\D/g, '')),
-                            description: plan.description,
-                            imageUrl: plan.imageUrl || imageService,
-                            quantity: 1,
-                          });
-                          toast.success('Đã thêm vào giỏ hàng!');
-                        }}
-                        size="large"
-                        block
-                        style={{
-                          height: '50px',
-                          borderRadius: '6px',
-                          fontSize: '16px',
-                          fontWeight: '600',
-                          ...(isHovered
-                            ? {
-                                background: 'linear-gradient(45deg, #ff6b6b, #ff8e8e)',
-                                border: 'none',
-                                color: '#fff',
-                                boxShadow: '0 4px 15px rgba(255, 107, 107, 0.4)',
-                              }
-                            : {
-                                borderColor: '#000',
-                                color: '#000',
-                              }),
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isHovered) {
-                            e.target.style.background = '#000';
-                            e.target.style.color = 'white';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isHovered) {
-                            e.target.style.background = 'transparent';
-                            e.target.style.color = '#000';
-                          }
-                        }}
-                      >
-                        {plan.buttonText}
-                      </Button>
+                      {role !== 'Admin' && role !== 'Staff' && (
+                        <Button
+                          type={plan.buttonType}
+                          onClick={() => {
+                            addToCart({
+                              id: plan.id,
+                              packageID: plan.packageID,
+                              packageName: plan.title,
+                              price: Number(plan.price.replace(/\D/g, '')),
+                              originalPrice: Number(plan.originalPrice.replace(/\D/g, '')),
+                              description: plan.description,
+                              imageUrl: plan.imageUrl || imageService,
+                              quantity: 1,
+                            });
+                            toast.success('Đã thêm vào giỏ hàng!');
+                          }}
+                          size="large"
+                          block
+                          style={{
+                            height: '50px',
+                            borderRadius: '6px',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            ...(isHovered
+                              ? {
+                                  background: 'linear-gradient(45deg, #ff6b6b, #ff8e8e)',
+                                  border: 'none',
+                                  color: '#fff',
+                                  boxShadow: '0 4px 15px rgba(255, 107, 107, 0.4)',
+                                }
+                              : {
+                                  borderColor: '#000',
+                                  color: '#000',
+                                }),
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isHovered) {
+                              e.target.style.background = '#000';
+                              e.target.style.color = 'white';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isHovered) {
+                              e.target.style.background = 'transparent';
+                              e.target.style.color = '#000';
+                            }
+                          }}
+                        >
+                          {plan.buttonText}
+                        </Button>
+                      )}
                     </Card>
                   </Col>
                 );

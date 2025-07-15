@@ -1,6 +1,10 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUser as getAllUserThunk } from '../store/slices/userSlice';
+import {
+  changeAccountStatus,
+  getAllUser as getAllUserThunk,
+  createNewStaff as createNewStaffThunk,
+} from '../store/slices/userSlice';
 
 export default function useUser() {
   const dispatch = useDispatch();
@@ -10,8 +14,24 @@ export default function useUser() {
     dispatch(getAllUserThunk());
   }, [dispatch]);
 
+  const changeUserStatus = useCallback(
+    (email) => {
+      dispatch(changeAccountStatus(email));
+    },
+    [dispatch],
+  );
+
+  const createNewStaff = useCallback(
+    (formData) => {
+      dispatch(createNewStaffThunk(formData));
+    },
+    [dispatch],
+  );
+
   return {
     getAllUser,
+    changeUserStatus,
+    createNewStaff,
     users,
     loading,
     error,

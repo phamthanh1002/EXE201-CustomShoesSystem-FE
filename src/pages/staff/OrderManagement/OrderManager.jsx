@@ -14,6 +14,7 @@ import usePickup from '../../../hooks/usePickup';
 import PickupModal from './PickupModal';
 import PrepareModal from './PrepareModal';
 import ShipModal from './ShipModal';
+import { toast } from 'react-toastify';
 
 const { Text } = Typography;
 
@@ -49,14 +50,22 @@ export default function OrderManager() {
 
   const clearAll = () => {
     setFilteredInfo({});
-    setSortedInfo({});
+    setSortedInfo({
+      columnKey: 'orderDate',
+      order: 'descend',
+    });
     setTableKey((prev) => prev + 1);
     fetchAllOrders();
     fetchPickup();
   };
 
   const reloadTable = async () => {
-    await Promise.all([fetchAllOrders(), fetchPickup()]);
+    try {
+      await Promise.all([fetchAllOrders(), fetchPickup()]);
+      toast.success('Tải lại dữ liệu thành công');
+    } catch (error) {
+      toast.error(error || 'Tải lại dữ liệu thất bại');
+    }
   };
 
   const getOrderActionType = (order, pickupList) => {
@@ -372,8 +381,15 @@ export default function OrderManager() {
                         </Text>
                       </div> */}
 
-                      <div style={{display:"flex"}}>
-                        <Text style={{ fontSize: 16, color: '#FFFFFF', fontWeight: 600, textAlign:"right" }}>
+                      <div style={{ display: 'flex' }}>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            color: '#FFFFFF',
+                            fontWeight: 600,
+                            textAlign: 'right',
+                          }}
+                        >
                           {item.total.toLocaleString('vi-VN')} VND
                         </Text>
                         {['Đang thực hiện'].includes(record.status) ? (
