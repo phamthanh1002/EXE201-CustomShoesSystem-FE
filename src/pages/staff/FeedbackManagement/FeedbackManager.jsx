@@ -70,7 +70,10 @@ export default function FeedbackManager() {
 
   const clearAll = () => {
     setFilteredInfo({});
-    setSortedInfo({});
+    setSortedInfo({
+      columnKey: 'createdAt',
+      order: 'descend',
+    });
     setFilteredFeedbacks(feedbacks);
   };
 
@@ -359,7 +362,9 @@ export default function FeedbackManager() {
           <Button danger onClick={clearAll}>
             x Clear all
           </Button>
-          <Button icon={<ReloadOutlined />} onClick={reloadTable} />
+          <Button onClick={reloadTable} style={{ color: 'black', borderColor: 'black' }}>
+            <ReloadOutlined />
+          </Button>
         </Space>
       </div>
 

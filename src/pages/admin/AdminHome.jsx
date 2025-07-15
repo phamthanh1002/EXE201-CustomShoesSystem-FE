@@ -7,6 +7,7 @@ import {
   CommentOutlined,
   ClockCircleOutlined,
   BankOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Typography } from 'antd';
 import dayjs from 'dayjs';
@@ -14,6 +15,7 @@ import OrderManager from '../staff/OrderManagement/OrderManager';
 import ProductManager from '../staff/ProductManagement/ProductManager';
 import FeedbackManager from '../staff/FeedbackManagement/FeedbackManager';
 import RevenueManager from './RevenueManagement/RevenueManager';
+import UserManager from './UserManagerment/UserManager';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -87,6 +89,16 @@ export default function AdminHome() {
               icon: <CommentOutlined />,
               label: 'Quản lý feedback',
             },
+            {
+              key: '4',
+              icon: <ShoppingCartOutlined />,
+              label: 'Quản lý order',
+            },
+            {
+              key: '5',
+              icon: <UserOutlined />,
+              label: 'Quản lý user',
+            },
           ]}
         />
       </Sider>
@@ -106,6 +118,8 @@ export default function AdminHome() {
           {selectedKey === '1' && <RevenueManager />}
           {selectedKey === '2' && <ProductManager />}
           {selectedKey === '3' && <FeedbackManager />}
+          {selectedKey === '4' && <OrderManager />}
+          {selectedKey === '5' && <UserManager />}
         </Content>
       </Layout>
     </Layout>

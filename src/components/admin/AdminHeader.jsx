@@ -45,16 +45,18 @@ const AdminHeader = () => {
     >
       {/* Logo + Title */}
       <div
-        onClick={() => navigate('/staff')}
+        onClick={() => navigate('/')}
         style={{
+          fontSize: 24,
+          fontWeight: 'bold',
+          cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
-          cursor: 'pointer',
-          gap: 12,
+          gap: 4,
         }}
       >
-        <Image src={logo} alt="Logo" width={48} preview={false} />
-        <Text style={{ fontSize: 22, fontWeight: 600, color: '#333' }}>DesignMyKicks</Text>
+        <Image src={logo} alt="Logo" style={{ width: 45, height: 45 }} preview={false} />
+        DesignMyKicks
       </div>
 
       {/* User Info */}
