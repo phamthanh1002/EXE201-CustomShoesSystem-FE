@@ -193,7 +193,7 @@ function ProfileTabs({ activeTab, setActiveTab, form, user }) {
 
   const totalOrder = orders.filter((ord) => ord.status !== 'Failed');
 
-  console.log('total', totalOrder);
+  // console.log('total', totalOrder);
 
   const totalMoneySpend = totalOrder.reduce((acc, ord) => acc + ord.totalAmount, 0);
 

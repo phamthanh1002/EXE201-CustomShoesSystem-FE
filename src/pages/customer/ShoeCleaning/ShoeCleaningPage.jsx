@@ -22,7 +22,7 @@ const ShoeCleaningPage = () => {
 
   const role = user?.roleName;
 
-  console.log(services);
+  // console.log(services);
 
   const [hoveredCardId, setHoveredCardId] = useState(null);
 

@@ -27,7 +27,7 @@ export default function Maps() {
     navigator.geolocation?.getCurrentPosition(
       (pos) => setUserPosition([pos.coords.latitude, pos.coords.longitude]),
       (err) => {
-        console.error('Lỗi lấy vị trí:', err);
+        // console.error('Lỗi lấy vị trí:', err);
         setUserPosition(null);
       },
     );

@@ -17,7 +17,6 @@
     "chart.js": "^4.5.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.16.0",
-    "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
     "lodash": "^4.17.21",
@@ -28,8 +27,7 @@
     "react-leaflet": "^5.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.1",
-    "react-toastify": "^11.0.5",
-    "redux-persist": "^6.0.0"
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

@@ -14,7 +14,7 @@ export default function PrepareModal({ open, order, checkedItems = [], onClose }
 
   const orderID = order?.orderID;
 
-  console.log(orderID);
+  // console.log(orderID);
 
   useEffect(() => {
     if (!open || !order || hasInitializedStep) return;
