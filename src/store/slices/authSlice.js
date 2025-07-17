@@ -54,6 +54,7 @@ export const forgotPassword = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(API_FORGOT_PASS, email);
+      console.log('API đã đc gọi');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message || 'Gửi otp thất bại!');

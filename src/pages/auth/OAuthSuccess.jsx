@@ -18,7 +18,8 @@ export default function OAuthSuccess() {
     const name = params.get('userName');
     const email = params.get('userEmail');
     const roleName = params.get('userRole');
-    const phoneNumber = '';
+    const hasPassword = params.get('hasPassword') === 'true'; // ← ép chuỗi thành boolean
+    const phoneNumber = params.get('phoneNumber') || '';
 
     const allValid = token && refreshToken && userID && email && name && roleName;
 
@@ -36,10 +37,15 @@ export default function OAuthSuccess() {
       phoneNumber,
     };
 
+    // Lưu thông tin đăng nhập
     dispatch(setGoogleLoginSuccess({ user, token, refreshToken }));
 
-    sessionStorage.setItem('googleLoginSuccess', 'true');
-    navigate('/');
+    if (hasPassword) {
+      sessionStorage.setItem('googleLoginSuccess', 'true');
+      navigate('/');
+    } else {
+      navigate('/create-password');
+    }
   }, [location, navigate, dispatch]);
 
   return <p>Đang xử lý đăng nhập...</p>;

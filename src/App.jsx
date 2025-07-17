@@ -17,6 +17,7 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
 const OAuthSuccess = lazy(() => import('./pages/auth/OAuthSuccess'));
 const ForgotPassPage = lazy(() => import('./pages/auth/ForgotPassPage'));
+const CreatePassPage = lazy(() => import('./pages/auth/CreatePassPage'));
 
 // Customer Pages
 const HomePage = lazy(() => import('./pages/customer/Home/HomePage'));
@@ -54,8 +55,14 @@ function App() {
 
   useEffect(() => {
     const isGoogleLogin = sessionStorage.getItem('googleLoginSuccess');
+
     if (user && isGoogleLogin) {
-      toast.success('Đăng nhập thành công!');
+      const currentPath = location.pathname;
+
+      if (currentPath !== '/create-password') {
+        toast.success('Đăng nhập thành công!');
+      }
+
       sessionStorage.removeItem('googleLoginSuccess');
     }
   }, [user, location]);
@@ -86,6 +93,7 @@ function App() {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/oauth-success" element={LazyWrapper(OAuthSuccess)} />
         <Route path="/forgot-password" element={LazyWrapper(ForgotPassPage)} />
+        <Route path="/create-password" element={LazyWrapper(CreatePassPage)} />
 
         {/* Customer */}
         <Route path="/" element={LazyWrapper(CustomerLayout)}>
