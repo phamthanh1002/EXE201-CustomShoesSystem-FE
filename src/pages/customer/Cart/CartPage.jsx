@@ -391,7 +391,7 @@ const CartPage = () => {
                       }}
                     >
                       <Text>
-                        {item.name} x{item.quantity}
+                        {item.name || item.packageName} x{item.quantity}
                       </Text>
                       <Text strong>{(item.price * item.quantity).toLocaleString()}đ</Text>
                     </div>

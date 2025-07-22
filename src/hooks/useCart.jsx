@@ -3,7 +3,7 @@ import {
   addToCart,
   removeFromCart,
   clearCart,
-  updateCartQuantity, // 👈 THÊM DÒNG NÀY
+  updateCartQuantity,
 } from '../store/slices/cartSlice';
 
 export default function useCart() {
