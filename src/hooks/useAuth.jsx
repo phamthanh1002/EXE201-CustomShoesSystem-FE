@@ -2,18 +2,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   editProfile,
   loginUser,
-  logout,
+  logout as logoutAction,
   registerUser,
   forgotPassword as forgotPasswordThunk,
   resetPassword as resetPasswordThunk,
 } from '../store/slices/authSlice';
+import { clearCart } from '../store/slices/cartSlice';
+import { clearBookmarks } from '../store/slices/bookmarkSlice';
 import { getMyAddress } from '../store/slices/customerAddressSlice';
-import useBookmark from './useBookmark';
 
 const useAuth = () => {
   const dispatch = useDispatch();
   const { user, token, refreshToken, message, loading, error } = useSelector((state) => state.auth);
-  const { clear } = useBookmark();
 
   const login = async (email, password) => {
     const action = await dispatch(loginUser({ email, password }));
@@ -27,9 +27,10 @@ const useAuth = () => {
     return dispatch(registerUser({ formData }));
   };
 
-  const logoutUser = () => {
-    dispatch(logout());
-    clear();
+  const logout = () => {
+    dispatch(logoutAction());
+    dispatch(clearCart());
+    dispatch(clearBookmarks());
   };
 
   const updateProfile = (email, formData) => dispatch(editProfile({ email, formData }));
@@ -47,7 +48,7 @@ const useAuth = () => {
     error,
     login,
     register,
-    logout: logoutUser,
+    logout,
     updateProfile,
     forgotPassword,
     resetPassword,
