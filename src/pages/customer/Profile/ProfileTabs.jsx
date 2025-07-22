@@ -325,7 +325,11 @@ function ProfileTabs({ activeTab, setActiveTab, form, user }) {
               >
                 <Row gutter={16}>
                   <Col xs={24} sm={12}>
-                    <Form.Item label="Họ và tên" name="name">
+                    <Form.Item
+                      label="Họ và tên"
+                      name="name"
+                      rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+                    >
                       <Input />
                     </Form.Item>
                   </Col>
@@ -339,7 +343,17 @@ function ProfileTabs({ activeTab, setActiveTab, form, user }) {
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12}>
-                    <Form.Item label="Số điện thoại" name="phone">
+                    <Form.Item
+                      label="Số điện thoại"
+                      name="phone"
+                      rules={[
+                        { required: true, message: 'Vui lòng nhập số điện thoại' },
+                        {
+                          pattern: /^[0-9]{9,11}$/,
+                          message: 'Số điện thoại không hợp lệ (chỉ chấp nhận 9-11 chữ số)',
+                        },
+                      ]}
+                    >
                       <Input />
                     </Form.Item>
                   </Col>

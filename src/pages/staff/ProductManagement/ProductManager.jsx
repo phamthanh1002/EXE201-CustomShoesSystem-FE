@@ -31,6 +31,8 @@ import { toast } from 'react-toastify';
 import EditProductModal from './EditProductModal';
 import useAuth from '../../../hooks/useAuth';
 import dayjs from 'dayjs';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 const { Text } = Typography;
 
@@ -98,6 +100,38 @@ export default function ProductManager() {
   };
 
   const closeEditModal = () => setIsEditModalOpen(false);
+
+  const handleExportExcel = () => {
+    if (!products || products.length === 0) {
+      toast.warning('Không có sản phẩm để xuất!');
+      return;
+    }
+
+    const exportData = products.map((product, index) => ({
+      STT: index + 1,
+      'Mã sản phẩm': product.productID,
+      'Tên sản phẩm': product.productName,
+      Loại: product.productType,
+      Giá: product.price.toLocaleString('vi-VN') + ' VND',
+      'Giảm giá (%)': product.discount + '%',
+      'Tổng tiền': product.total.toLocaleString('vi-VN') + ' VND',
+      'Màu sắc': product.color || '',
+      'Kích cỡ': product.size || '',
+      'Đã bán': product.soldQuantity,
+      'Tồn kho': product.stockQuantity,
+      'Trạng thái': product.isActive ? 'Đang bán' : 'Ẩn',
+      'Ngày tạo': dayjs(product.createdAt).format('DD/MM/YYYY HH:mm'),
+      'Mô tả': product.description || '',
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách sản phẩm');
+
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'DanhSachSanPham.xlsx');
+  };
 
   const productColumns = [
     {
@@ -372,6 +406,13 @@ export default function ProductManager() {
         <Space>
           <Button onClick={clearAll} style={{ color: 'red', borderColor: 'red' }}>
             x Clear all
+          </Button>
+
+          <Button
+            style={{ backgroundColor: '#52c41a', color: 'white' }}
+            onClick={handleExportExcel}
+          >
+            Xuất Excel
           </Button>
 
           <Button onClick={openCreateModal} type="primary">
