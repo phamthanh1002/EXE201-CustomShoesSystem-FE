@@ -242,8 +242,11 @@ export default function LoginPage() {
                   marginTop: 8,
                 }}
                 onClick={() => {
-                  window.location.href =
-                    'https://localhost:7256/api/auth/login-google-oauth-redirect';
+                  const baseURL = import.meta.env.DEV
+                    ? import.meta.env.VITE_DEV_API_BASE_URL
+                    : import.meta.env.VITE_DEPLOY_API_BASE_URL;
+
+                  window.location.href = `${baseURL}/auth/login-google-oauth-redirect`;
                 }}
               >
                 Đăng nhập với Google
