@@ -8,6 +8,8 @@ import {
   LinearScale,
   Tooltip,
   Legend,
+  BarController,
+  LineController,
 } from 'chart.js';
 import { useEffect, useState } from 'react';
 import { Card, Col, Row, Statistic, Spin, Select, Typography, Space, Divider } from 'antd';
@@ -20,6 +22,8 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 ChartJS.register(
+  BarController,
+  LineController,
   BarElement,
   LineElement,
   PointElement,
