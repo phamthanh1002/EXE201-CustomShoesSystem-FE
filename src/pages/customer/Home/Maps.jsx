@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Typography, Tag } from 'antd';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
-import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import 'leaflet/dist/leaflet.css';
-import Routing from '../../../components/common/Routing';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import L from 'leaflet';
+import Routing from '../../../components/common/Routing';
+
+// Import hình ảnh marker đúng cách
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Cấu hình lại icon mặc định của Leaflet để tránh lỗi 404
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 const { Title, Text } = Typography;
 
@@ -26,10 +40,7 @@ export default function Maps() {
   useEffect(() => {
     navigator.geolocation?.getCurrentPosition(
       (pos) => setUserPosition([pos.coords.latitude, pos.coords.longitude]),
-      (err) => {
-        // console.error('Lỗi lấy vị trí:', err);
-        setUserPosition(null);
-      },
+      () => setUserPosition(null),
     );
   }, []);
 
