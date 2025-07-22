@@ -18,8 +18,8 @@ export default function OAuthSuccess() {
     const name = params.get('userName');
     const email = params.get('userEmail');
     const roleName = params.get('userRole');
-    const hasPassword = params.get('hasPassword') === 'true'; // ← ép chuỗi thành boolean
-    const phoneNumber = params.get('phoneNumber') || '';
+    const hasPassword = params.get('hasPassword') === 'true'; 
+    const phoneNumber = params.get('PhoneNumber') || '';
 
     const allValid = token && refreshToken && userID && email && name && roleName;
 

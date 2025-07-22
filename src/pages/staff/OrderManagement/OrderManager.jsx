@@ -15,6 +15,8 @@ import PickupModal from './PickupModal';
 import PrepareModal from './PrepareModal';
 import ShipModal from './ShipModal';
 import { toast } from 'react-toastify';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 const { Text } = Typography;
 
@@ -66,6 +68,30 @@ export default function OrderManager() {
     } catch (error) {
       toast.error(error || 'Tải lại dữ liệu thất bại');
     }
+  };
+
+  const handleExportExcel = () => {
+    if (!totalOrder.length) {
+      toast.warn('Không có đơn hàng để xuất!');
+      return;
+    }
+
+    const dataToExport = totalOrder.map((order, index) => ({
+      STT: index + 1,
+      'Mã đơn hàng': order.orderID,
+      'Ngày đặt hàng': new Date(order.orderDate).toLocaleString('vi-VN'),
+      'Địa chỉ giao hàng': order.deliveryAddress,
+      'Tổng tiền': order.totalAmount.toLocaleString('vi-VN') + ' VND',
+      'Trạng thái': order.status,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách đơn hàng');
+
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'DanhSachDonHang.xlsx');
   };
 
   const getOrderActionType = (order, pickupList) => {
@@ -307,8 +333,14 @@ export default function OrderManager() {
         <Title level={4}>Quản lý đơn hàng</Title>
       </Space>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
-        <Button onClick={clearAll} style={{ color: 'red', borderColor: 'red', marginRight: 15 }}>
+        <Button onClick={clearAll} style={{ color: 'red', borderColor: 'red', marginRight: 10 }}>
           x Clear all
+        </Button>
+        <Button
+          style={{ backgroundColor: '#52c41a', color: 'white', marginRight: 10 }}
+          onClick={handleExportExcel}
+        >
+          Xuất Excel
         </Button>
         <Button onClick={reloadTable} style={{ color: 'black', borderColor: 'black' }}>
           <ReloadOutlined />

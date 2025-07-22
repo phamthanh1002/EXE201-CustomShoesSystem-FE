@@ -1,12 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form, Input, Button, Typography, Card, Space } from 'antd';
-import { LockOutlined, PhoneOutlined, NumberOutlined } from '@ant-design/icons';
+import { LockOutlined, PhoneOutlined, NumberOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { forgotPassword } from '../../store/slices/authSlice';
-import { values } from 'lodash';
 
 const { Title } = Typography;
 
@@ -16,9 +15,12 @@ export default function CreatePassPage() {
   const dispatch = useDispatch();
   const calledRef = useRef(false);
   const { updateProfile, resetPassword, logout, user } = useAuth();
+  const [sending, setSending] = useState(false);
 
   const email = user?.email;
   const name = user?.name;
+
+  const oldUser = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
     if (!email || calledRef.current) return;
@@ -57,8 +59,9 @@ export default function CreatePassPage() {
       newPassword: values.newPassword,
       confirmNewPassword: values.confirmNewPassword,
     });
+
     if (res.type.endsWith('rejected')) {
-      throw new Error(res?.error?.message || 'Tạo mật khẩu thất bại!');
+      throw new Error(res?.payload || 'Tạo mật khẩu thất bại!');
     }
   };
 
@@ -67,16 +70,11 @@ export default function CreatePassPage() {
       await createPhoneNumber(values);
       await createPassword(values);
 
-      // Lấy lại dữ liệu user hiện tại từ localStorage
-      const oldUser = JSON.parse(localStorage.getItem('user') || '{}');
-
       const updatedUser = {
         ...oldUser,
         phoneNumber: values.phoneNumber,
-        // Thêm các trường khác nếu cần
       };
 
-      // Cập nhật lại localStorage
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
       toast.success('Tạo mật khẩu thành công!');
@@ -85,7 +83,7 @@ export default function CreatePassPage() {
       toast.error(error?.message || 'Đã xảy ra lỗi!');
     }
   };
-  
+
   const handleCancel = () => {
     logout();
     navigate('/login');
@@ -133,11 +131,37 @@ export default function CreatePassPage() {
           </Form.Item>
 
           <Form.Item
+            label="OTP"
             name="otp"
-            label="Mã xác nhận (OTP)"
-            rules={[{ required: true, message: 'Vui lòng nhập mã OTP!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập OTP!' }]}
           >
-            <Input size="large" prefix={<NumberOutlined />} placeholder="Nhập mã OTP" />
+            <Input
+              prefix={<NumberOutlined />}
+              placeholder="Nhập mã OTP"
+              maxLength={6}
+              suffix={
+                <ReloadOutlined
+                  style={{ color: 'black', cursor: sending ? 'not-allowed' : 'pointer' }}
+                  spin={sending}
+                  onClick={async () => {
+                    if (sending) return;
+                    setSending(true);
+                    try {
+                      const action = await dispatch(forgotPassword({ email }));
+                      if (action.type.endsWith('fulfilled')) {
+                        toast.success('Đã gửi lại OTP, vui lòng kiểm tra email.');
+                      } else {
+                        toast.error(action.payload || 'Gửi lại OTP thất bại!');
+                      }
+                    } catch (err) {
+                      toast.error(err.response?.data?.message || 'Gửi lại OTP thất bại!');
+                    } finally {
+                      setSending(false);
+                    }
+                  }}
+                />
+              }
+            />
           </Form.Item>
 
           <Form.Item
