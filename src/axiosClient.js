@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_DEPLOY_API_BASE_URL,
+  baseURL:
+    import.meta.env.MODE === 'development'
+      ? import.meta.env.VITE_DEV_API_BASE_URL
+      : import.meta.env.VITE_DEPLOY_API_BASE_URL,
 });
 
 let isRefreshing = false;

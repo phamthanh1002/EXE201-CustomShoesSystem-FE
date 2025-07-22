@@ -2,25 +2,20 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  // base: '/',
   plugins: [react()],
   build: {
     sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react')) return 'vendor-react';
-            if (id.includes('antd')) return 'vendor-antd';
-            if (id.includes('lodash')) return 'vendor-lodash';
-            if (id.includes('redux')) return 'vendor-redux';
-            if (id.includes('leaflet')) return 'vendor-leaflet';
-            if (id.includes('chart.js') || id.includes('react-chartjs')) return 'vendor-chartjs';
-            if (id.includes('xlsx')) return 'vendor-xlsx';
-            if (id.includes('framer-motion')) return 'vendor-motion';
-            if (id.includes('react-toastify')) return 'vendor-toastify';
-            return 'vendor';
-          }
+        manualChunks: {
+          // Use object syntax instead of function - safer for React
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-antd': ['antd', '@ant-design/icons'],
+          'vendor-redux': ['@reduxjs/toolkit', 'react-redux'],
+          'vendor-charts': ['chart.js', 'react-chartjs-2'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-leaflet': ['leaflet', 'react-leaflet'],
+          'vendor-utils': ['lodash', 'axios', 'dayjs'],
         },
       },
     },
