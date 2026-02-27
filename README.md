@@ -1,6 +1,6 @@
-# DesignMyKicks - Custom Shoes System
+<img width="1917" height="868" alt="image" src="https://github.com/user-attachments/assets/141f172d-bcc3-41c4-a682-1e4752b15ff5" /># DesignMyKicks - Custom Shoes System
 
-A comprehensive e-commerce platform for customizing and purchasing shoes with integrated management systems for customers, staff, and admins.
+A comprehensive e-commerce platform for purchasing customize shoes with integrated management systems for customers, staff, and admins.
 
 ## 🌟 Features
 
@@ -36,7 +36,18 @@ Check out the live version: [DesignMyKicks](https://designmykicks.vercel.app/)
 
 ## 📸 Screenshots
 
-![DesignMyKicks Preview](https://via.placeholder.com/800x400)
+![DesignMyKicks Preview](https://github.com/user-attachments/assets/a24e4803-05cc-4cf1-8f75-6d33a8f3e655)
+![DesignMyKicks Preview](https://github.com/user-attachments/assets/9f2c4ff2-6b33-4d2e-9ad9-4b1054b8b6bb)
+![DesignMyKicks Preview](https://github.com/user-attachments/assets/8148781b-acce-4955-9773-edceb2d92b8f)
+![DesignMyKicks Preview](https://github.com/user-attachments/assets/512bd076-e1ed-4d50-9d9a-8389279dc16c)
+![DesignMyKicks Preview](https://github.com/user-attachments/assets/bbe8bac3-9993-4de2-b1a1-fc3c9e3a9e3c)
+![DesignMyKicks Preview](https://github.com/user-attachments/assets/85563222-22fd-4571-917b-232db2b01424)
+![DesignMyKicks Preview](https://github.com/user-attachments/assets/c118d7eb-01c4-4549-9fbf-2f601ac0cebd)
+![DesignMyKicks Preview](https://github.com/user-attachments/assets/4b30fd16-7e34-45a5-9503-a23a45b84507)
+
+
+
+
 
 ## 🚀 Getting Started
 
