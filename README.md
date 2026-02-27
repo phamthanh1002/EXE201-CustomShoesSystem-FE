@@ -1,12 +1,136 @@
-# React + Vite
+# DesignMyKicks - Custom Shoes System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive e-commerce platform for customizing and purchasing shoes with integrated management systems for customers, staff, and admins.
 
-Currently, two official plugins are available:
+## 🌟 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 👟 **Custom Shoes Shop** - Browse and purchase pre-customized shoes
+- 🧹 **Shoe Cleaning Services** - Professional shoe care services
+- 🎀 **Accessories Shop** - Browse and purchase shoe accessories
+- 🛒 **Smart Shopping Cart** - Manage items and checkout
+- 💳 **Payment Processing** - Secure payment gateway integration
+- 📦 **Order Management** - Track orders and delivery status
+- ⭐ **Reviews & Ratings** - Customer feedback system
+- 🔖 **Wishlist** - Save favorite products
+- 📍 **Address Management** - Multiple delivery addresses
+- 📊 **Admin Dashboard** - Revenue analytics and reporting
+- 👥 **Staff Portal** - Order and product management
+- 📈 **Data Visualization** - Charts and insights for business analytics
 
-## Expanding the ESLint configuration
+## 🔗 Live Demo
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Check out the live version: [DesignMyKicks](https://designmykicks.vercel.app/)
+
+## 🛠️ Technologies Used
+
+- **React** (v19.1.0) - UI Library
+- **Vite** (v6.3.5) - Build Tool
+- **Redux Toolkit** (v2.8.2) - State Management
+- **React Router** (v7.6.1) - Routing
+- **Ant Design** (v5.25.3) - UI Components
+- **Framer Motion** (v12.16.0) - Animations
+- **Chart.js** (v4.5.0) - Data Visualization
+- **Axios** (v1.9.0) - HTTP Client
+- **React Leaflet** (v5.0.0) - Maps
+- **React Toastify** (v11.0.5) - Notifications
+
+## 📸 Screenshots
+
+![DesignMyKicks Preview](https://via.placeholder.com/800x400)
+
+## 🚀 Getting Started
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/phamthanh1002/EXE201-CustomShoesSystem-FE.git
+cd EXE201-CustomShoesSystem-FE
+```
+
+### Installation
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Create a `.env` file in the root directory:
+```
+VITE_API_BASE_URL=your_backend_api_url
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+The application will run at `http://localhost:5173`
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+### Run ESLint
+
+```bash
+npm run lint
+```
+
+## 📂 Folder Structure
+
+```
+EXE201-CustomShoesSystem-FE/
+├── public/                      # Static assets
+├── src/
+│   ├── assets/                  # Images and media
+│   ├── components/              # React components
+│   │   ├── admin/               # Admin components
+│   │   ├── common/              # Shared components
+│   │   ├── customer/            # Customer components
+│   │   └── staff/               # Staff components
+│   ├── hooks/                   # Custom React hooks
+│   ├── layouts/                 # Layout components
+│   ├── pages/                   # Page components
+│   │   ├── admin/               # Admin pages
+│   │   ├── auth/                # Auth pages
+│   │   ├── customer/            # Customer pages
+│   │   └── staff/               # Staff pages
+│   ├── store/                   # Redux store
+│   │   └── slices/              # Redux slices
+│   ├── utils/                   # Utility functions
+│   ├── App.jsx                  # Root component
+│   ├── main.jsx                 # Entry point
+│   └── index.css                # Global styles
+├── index.html
+├── package.json
+├── vite.config.js
+└── vercel.json
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to fork this repository and submit a pull request.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+**Course:** EXE201 - Capstone Project  
+**University:** FPT University  
+**Version:** 1.0.0
