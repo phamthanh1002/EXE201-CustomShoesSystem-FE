@@ -1,4 +1,4 @@
-<img width="1917" height="868" alt="image" src="https://github.com/user-attachments/assets/141f172d-bcc3-41c4-a682-1e4752b15ff5" /># DesignMyKicks - Custom Shoes System
+# DesignMyKicks - Custom Shoes System
 
 A comprehensive e-commerce platform for purchasing customize shoes with integrated management systems for customers, staff, and admins.
 
